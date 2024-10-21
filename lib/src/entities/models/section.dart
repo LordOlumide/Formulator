@@ -20,6 +20,18 @@ class Section {
     required this.subsections,
   });
 
+  Section copyWith({
+    String? name,
+    double? weight,
+    List<SubSection>? subsections,
+  }) {
+    return Section(
+      name: name ?? this.name,
+      weight: weight ?? this.weight,
+      subsections: subsections ?? this.subsections,
+    );
+  }
+
   @override
   String toString() {
     return 'Section{name: $name, weight: $weight, subsections: $subsections}';

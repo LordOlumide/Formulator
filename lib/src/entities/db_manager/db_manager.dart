@@ -4,9 +4,11 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 class DBManager extends ChangeNotifier {
   final Box<Formula> formulaBox;
-  List<Formula> _activeFormulas = [];
+  Map<String, Formula> _activeFormulas = {};
 
-  List<Formula> get formulas => _activeFormulas;
+  Map<String, Formula> get formulasMap => _activeFormulas;
+  List<Formula> get formulas => _activeFormulas.values.toList();
+  List<String> get formulaNames => _activeFormulas.keys.toList();
   int get formulaCount => _activeFormulas.length;
 
   DBManager({required this.formulaBox}) {
@@ -14,13 +16,22 @@ class DBManager extends ChangeNotifier {
   }
 
   void _refreshFormulasFromBox() {
-    _activeFormulas = formulaBox.values.toList();
+    _activeFormulas = Map<String, Formula>.from(formulaBox.toMap());
     notifyListeners();
     print(_activeFormulas);
   }
 
-  void addOrUpdateFormula(Formula newFormula) {
+  void addFormula(Formula newFormula) {
     formulaBox.put(newFormula.name, newFormula);
+    _refreshFormulasFromBox();
+  }
+
+  void replaceFormula({
+    required String formulaNameToReplace,
+    required Formula replacementFormula,
+  }) {
+    formulaBox.delete(formulaNameToReplace);
+    formulaBox.put(replacementFormula.name, replacementFormula);
     _refreshFormulasFromBox();
   }
 

@@ -23,6 +23,20 @@ class Entry {
     required this.weight,
   });
 
+  Entry copyWith({
+    String? name,
+    double? value,
+    double? referenceValue,
+    double? weight,
+  }) {
+    return Entry(
+      name: name ?? this.name,
+      value: value ?? this.value,
+      referenceValue: referenceValue ?? this.referenceValue,
+      weight: weight ?? this.weight,
+    );
+  }
+
   @override
   String toString() {
     return 'Entry{name: $name, value: $value, referenceValue: $referenceValue, '

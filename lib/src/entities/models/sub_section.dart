@@ -20,6 +20,18 @@ class SubSection {
     required this.entries,
   });
 
+  SubSection copyWith({
+    String? name,
+    double? weight,
+    List<Entry>? entries,
+  }) {
+    return SubSection(
+      name: name ?? this.name,
+      weight: weight ?? this.weight,
+      entries: entries ?? this.entries,
+    );
+  }
+
   @override
   String toString() {
     return 'SubSection{name: $name, weight: $weight, entries: $entries}';

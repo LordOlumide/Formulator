@@ -13,6 +13,19 @@ class Formula {
 
   const Formula({required this.name, required this.sections});
 
+  List<String> get sectionNames =>
+      sections.map((section) => section.name).toList();
+
+  Formula copyWith({
+    String? name,
+    List<Section>? sections,
+  }) {
+    return Formula(
+      name: name ?? this.name,
+      sections: sections ?? this.sections,
+    );
+  }
+
   @override
   String toString() {
     return 'Formula{name: $name, sections: $sections}';
