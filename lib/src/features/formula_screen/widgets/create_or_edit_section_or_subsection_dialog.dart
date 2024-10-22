@@ -1,50 +1,66 @@
 import 'package:flutter/material.dart';
-import 'package:formulator/src/utils/extensions/string_extension.dart';
+import 'package:flutter/services.dart';
 import 'package:formulator/src/utils/functions/validators.dart';
 import 'package:formulator/src/utils/widgets/primary_button.dart';
 
-class CreateOrRenameFormulaDialog extends StatefulWidget {
+class CreateOrEditSectionOrSubSectionDialog extends StatefulWidget {
+  final bool isSectionNotSubSection;
   final bool isCreateNotRename;
-  final String? initialValue;
+  final String? initialNameValue;
+  final String? initialWeightValue;
 
-  const CreateOrRenameFormulaDialog({
+  const CreateOrEditSectionOrSubSectionDialog({
     super.key,
+    this.isSectionNotSubSection = true,
     this.isCreateNotRename = true,
-    this.initialValue,
+    this.initialNameValue,
+    this.initialWeightValue,
   });
 
   @override
-  State<CreateOrRenameFormulaDialog> createState() =>
-      _CreateOrRenameFormulaDialogState();
+  State<CreateOrEditSectionOrSubSectionDialog> createState() =>
+      _CreateOrEditSectionOrSubSectionDialogState();
 }
 
-class _CreateOrRenameFormulaDialogState
-    extends State<CreateOrRenameFormulaDialog> {
+class _CreateOrEditSectionOrSubSectionDialogState
+    extends State<CreateOrEditSectionOrSubSectionDialog> {
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController weightController = TextEditingController();
 
   final FocusNode firstFocusNode = FocusNode();
   final FocusNode secondFocusNode = FocusNode();
+  final FocusNode thirdFocusNode = FocusNode();
 
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    if (widget.initialValue != null) {
-      nameController.text = widget.initialValue!;
+    if (widget.initialNameValue != null) {
+      nameController.text = widget.initialNameValue!;
+    }
+    if (widget.initialWeightValue != null) {
+      weightController.text = widget.initialWeightValue!;
+    } else {
+      weightController.text = '1';
     }
   }
 
   @override
   void dispose() {
     nameController.dispose();
+    weightController.dispose();
     firstFocusNode.dispose();
     secondFocusNode.dispose();
+    thirdFocusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final String sectionOrSubsection =
+        widget.isSectionNotSubSection ? 'Section' : 'Sub-Section';
+
     return Dialog(
       backgroundColor: Colors.lightBlue.shade50,
       insetPadding: EdgeInsets.symmetric(
@@ -64,19 +80,19 @@ class _CreateOrRenameFormulaDialogState
               const SizedBox(height: 20),
               Text(
                 widget.isCreateNotRename
-                    ? 'Create New Formula'
-                    : 'Rename Formula',
+                    ? 'Create New $sectionOrSubsection'
+                    : 'Edit $sectionOrSubsection',
                 style: const TextStyle(
                   fontSize: 23,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               const SizedBox(height: 25),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Formula Name',
-                  style: TextStyle(fontSize: 17),
+                  '$sectionOrSubsection Name',
+                  style: const TextStyle(fontSize: 17),
                 ),
               ),
               const SizedBox(height: 4),
@@ -90,15 +106,40 @@ class _CreateOrRenameFormulaDialogState
                   FocusScope.of(context).requestFocus(secondFocusNode);
                 },
               ),
+              const SizedBox(height: 10),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  '$sectionOrSubsection Weight',
+                  style: const TextStyle(fontSize: 17),
+                ),
+              ),
+              const SizedBox(height: 4),
+              TextFormField(
+                focusNode: secondFocusNode,
+                controller: weightController,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                ],
+                decoration: const InputDecoration(border: OutlineInputBorder()),
+                validator: (value) => Validators.simpleValidator(value),
+                onFieldSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(thirdFocusNode);
+                },
+              ),
               const SizedBox(height: 25),
               PrimaryButton(
+                focusNode: thirdFocusNode,
                 shrink: true,
-                focusNode: secondFocusNode,
                 color: Colors.blue,
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    Navigator.of(context)
-                        .pop(nameController.text.toFirstUpperCase());
+                    Navigator.of(context).pop({
+                      'name': nameController.text,
+                      'weight': weightController.text,
+                    });
                   }
                 },
                 borderRadius: BorderRadius.circular(35),
@@ -106,7 +147,7 @@ class _CreateOrRenameFormulaDialogState
                 padding:
                     const EdgeInsets.symmetric(vertical: 9, horizontal: 20),
                 child: Text(
-                  widget.isCreateNotRename ? 'Create' : 'Rename',
+                  widget.isCreateNotRename ? 'Create' : 'Edit',
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w600,
