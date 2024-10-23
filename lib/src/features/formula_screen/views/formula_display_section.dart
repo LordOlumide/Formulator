@@ -14,7 +14,7 @@ class FormulaDisplaySection extends StatelessWidget {
     return Consumer<DBManager>(
       builder: (context, manager, child) {
         return SizedBox(
-          height: 60,
+          height: 55,
           child: Row(
             children: [
               Expanded(
@@ -39,6 +39,7 @@ class FormulaDisplaySection extends StatelessWidget {
               Container(
                 width: 150,
                 padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
+                margin: const EdgeInsets.only(right: 10),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.blue.shade600, width: 5),
                 ),

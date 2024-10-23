@@ -113,7 +113,6 @@ class _FormulaScreenState extends State<FormulaScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // TODO: Display total section weight
               FormulaDisplaySection(
                 controller: horizFormulaController,
                 formulaName: widget.formulaName,

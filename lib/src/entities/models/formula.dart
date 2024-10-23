@@ -23,12 +23,11 @@ class Formula {
   double get totalSectionWeight =>
       sections.fold(0, (prev, element) => prev + element.weight);
 
-  double get answer =>
-      sections.fold<double>(
+  double get answer => sections.fold<double>(
         0,
-        (prev, element) => prev + (element.weight * element.answer),
-      ) /
-      sections.length;
+        (prev, element) =>
+            prev + ((element.weight / totalSectionWeight) * element.answer),
+      );
 
   static List<Color> colors = [
     Colors.green.shade800,
@@ -40,10 +39,8 @@ class Formula {
     Colors.cyan.shade800,
     Colors.amber.shade800,
   ];
-  static double sectionLevelFont = 28;
-  static double subSectionLevelFont = 24;
-  static double entryLevelFont = 20;
-  static double fractionLevelFont = 14;
+  static double bracketFontSize = 30;
+  static double fractionFontSize = 16;
 
   List<InlineSpan> get formulaDetails {
     List<InlineSpan> spans = [];
@@ -51,10 +48,29 @@ class Formula {
     int colorIndex = 0;
     for (Section section in sections) {
       spans.add(
+        WidgetSpan(
+          child: Column(
+            children: [
+              Text(
+                section.weight.formatToString,
+                style: TextStyle(
+                    fontSize: fractionFontSize, fontWeight: FontWeight.w700),
+              ),
+              Container(width: 20, height: 3, color: Colors.black),
+              Text(
+                totalSectionWeight.formatToString,
+                style: TextStyle(
+                    fontSize: fractionFontSize, fontWeight: FontWeight.w700),
+              ),
+            ],
+          ),
+        ),
+      );
+      spans.add(
         TextSpan(
-          text: '${section.weight.formatToString}( ',
-          style: TextStyle(
-              fontSize: sectionLevelFont, fontWeight: FontWeight.w700),
+          text: '( ',
+          style:
+              TextStyle(fontSize: bracketFontSize, fontWeight: FontWeight.w700),
         ),
       );
       for (SubSection subSection in section.subsections) {
@@ -62,16 +78,50 @@ class Formula {
         final Color sectionColor = colors[colorIndex];
 
         spans.add(
+          WidgetSpan(
+            child: Column(
+              children: [
+                Text(
+                  subSection.weight.formatToString,
+                  style: TextStyle(fontSize: fractionFontSize),
+                ),
+                Container(width: 20, height: 3, color: Colors.black),
+                Text(
+                  section.totalSubSectionWeight.formatToString,
+                  style: TextStyle(fontSize: fractionFontSize),
+                ),
+              ],
+            ),
+          ),
+        );
+        spans.add(
           TextSpan(
-            text: '${subSection.weight.formatToString}( ',
-            style: TextStyle(fontSize: subSectionLevelFont),
+            text: '( ',
+            style: TextStyle(fontSize: bracketFontSize),
           ),
         );
         for (Entry entry in subSection.entries) {
           spans.add(
+            WidgetSpan(
+              child: Column(
+                children: [
+                  Text(
+                    entry.weight.formatToString,
+                    style: TextStyle(fontSize: fractionFontSize),
+                  ),
+                  Container(width: 20, height: 3, color: Colors.black),
+                  Text(
+                    subSection.totalEntriesWeight.formatToString,
+                    style: TextStyle(fontSize: fractionFontSize),
+                  ),
+                ],
+              ),
+            ),
+          );
+          spans.add(
             TextSpan(
-              text: '${entry.weight.formatToString}(',
-              style: TextStyle(fontSize: entryLevelFont, color: sectionColor),
+              text: '(',
+              style: TextStyle(fontSize: bracketFontSize, color: sectionColor),
             ),
           );
           spans.add(
@@ -81,13 +131,13 @@ class Formula {
                   Text(
                     entry.value.formatToString.toString(),
                     style: TextStyle(
-                        fontSize: fractionLevelFont, color: sectionColor),
+                        fontSize: fractionFontSize, color: sectionColor),
                   ),
                   Container(width: 20, height: 3, color: sectionColor),
                   Text(
                     entry.referenceValue.formatToString.toString(),
                     style: TextStyle(
-                        fontSize: fractionLevelFont, color: sectionColor),
+                        fontSize: fractionFontSize, color: sectionColor),
                   ),
                 ],
               ),
@@ -95,9 +145,17 @@ class Formula {
           );
           spans.add(
             TextSpan(
-              text:
-                  ')${subSection.entries.indexOf(entry) < subSection.entries.length - 1 ? '+' : ''}',
-              style: TextStyle(fontSize: entryLevelFont, color: sectionColor),
+              text: ')',
+              style: TextStyle(fontSize: bracketFontSize, color: sectionColor),
+            ),
+          );
+          spans.add(
+            TextSpan(
+              text: subSection.entries.indexOf(entry) <
+                      subSection.entries.length - 1
+                  ? '+'
+                  : '',
+              style: TextStyle(fontSize: bracketFontSize),
             ),
           );
         }
@@ -105,7 +163,7 @@ class Formula {
           TextSpan(
             text:
                 ' )${section.subsections.indexOf(subSection) < section.subsections.length - 1 ? ' + ' : ''}',
-            style: TextStyle(fontSize: subSectionLevelFont),
+            style: TextStyle(fontSize: bracketFontSize),
           ),
         );
       }
@@ -114,7 +172,7 @@ class Formula {
           text:
               ' )${sections.indexOf(section) < sections.length - 1 ? ' + ' : ''}',
           style: TextStyle(
-            fontSize: sectionLevelFont,
+            fontSize: bracketFontSize,
             fontWeight: FontWeight.w700,
           ),
         ),

@@ -20,10 +20,10 @@ class Section {
   double get answer {
     if (subsections.isNotEmpty) {
       return subsections.fold<double>(
-            0,
-            (prev, element) => prev + (element.weight * element.answer),
-          ) /
-          subsections.length;
+        0,
+        (prev, element) =>
+            prev + ((element.weight / totalSubSectionWeight) * element.answer),
+      );
     } else {
       return 0;
     }
