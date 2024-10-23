@@ -68,8 +68,14 @@ class SubsectionContainer extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
+          const EntryReference(),
           for (int i = 0; i < subSection.entries.length; i++)
-            EntryContainer(entry: subSection.entries[i]),
+            EntryContainer(
+              formulaName: formulaName,
+              sectionName: sectionName,
+              subSectionName: subSection.name,
+              entry: subSection.entries[i],
+            ),
         ],
       ),
     );

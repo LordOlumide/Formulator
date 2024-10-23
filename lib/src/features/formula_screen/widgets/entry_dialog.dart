@@ -101,7 +101,7 @@ class _EntryDialogState extends State<EntryDialog> {
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Entry Name',
+                  'Name',
                   style: TextStyle(fontSize: 17),
                 ),
               ),
@@ -120,7 +120,7 @@ class _EntryDialogState extends State<EntryDialog> {
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Entry Value',
+                  'Value',
                   style: TextStyle(fontSize: 17),
                 ),
               ),
@@ -143,7 +143,7 @@ class _EntryDialogState extends State<EntryDialog> {
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Entry Weight',
+                  'Reference Value',
                   style: TextStyle(fontSize: 17),
                 ),
               ),
@@ -166,7 +166,7 @@ class _EntryDialogState extends State<EntryDialog> {
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Entry Weight',
+                  'Weight',
                   style: TextStyle(fontSize: 17),
                 ),
               ),

@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class SectionHeaders extends StatelessWidget {
   final ValueNotifier<String?> selectedSectionNotifier;
-  final VoidCallback resetSelectedNotifier;
+  final Function(String?) resetSelectedNotifier;
   final String formulaName;
 
   const SectionHeaders({
@@ -175,6 +175,7 @@ class SectionHeaders extends StatelessWidget {
             formulaNameToReplace: editedFormula.name,
             replacementFormula: editedFormula,
           );
+      selectedSectionNotifier.value = map['name'];
     }
   }
 
@@ -232,6 +233,7 @@ class SectionHeaders extends StatelessWidget {
             formulaNameToReplace: editedFormula.name,
             replacementFormula: editedFormula,
           );
+      selectedSectionNotifier.value = map['name'];
     }
   }
 
@@ -259,7 +261,7 @@ class SectionHeaders extends StatelessWidget {
     if (shouldDeleteSection == null || shouldDeleteSection == false) return;
 
     if (context.mounted) {
-      resetSelectedNotifier();
+      resetSelectedNotifier(sectionToDeleteName);
       final List<Section> sections = [...initialFormula.sections];
       sections.removeWhere((section) => section.name == sectionToDeleteName);
       final Formula newFormula = initialFormula.copyWith(sections: sections);

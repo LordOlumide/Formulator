@@ -23,13 +23,32 @@ class _FormulaScreenState extends State<FormulaScreen> {
     resetSelectedNotifier();
   }
 
-  void resetSelectedNotifier() {
+  void resetSelectedNotifier([String? nameOfSectionAboutToBeDeleted]) {
     Formula initialFormula =
         context.read<DBManager>().formulasMap[widget.formulaName]!;
-    if (initialFormula.sections.isNotEmpty) {
-      selectedSectionNotifier.value = initialFormula.sections[0].name;
-    } else {
+    final List<String> availableSections = initialFormula.sectionNames;
+
+    if (nameOfSectionAboutToBeDeleted == null) {
+      if (availableSections.isNotEmpty) {
+        selectedSectionNotifier.value = availableSections[0];
+      } else {
+        selectedSectionNotifier.value = null;
+      }
+      return;
+    }
+
+    final int indexToBeDeleted =
+        availableSections.indexOf(nameOfSectionAboutToBeDeleted);
+    if (availableSections.isEmpty || availableSections.length == 1) {
       selectedSectionNotifier.value = null;
+    } else {
+      if (indexToBeDeleted > 0) {
+        selectedSectionNotifier.value = availableSections[indexToBeDeleted - 1];
+      } else if (availableSections.length - 1 > indexToBeDeleted) {
+        selectedSectionNotifier.value = availableSections[indexToBeDeleted + 1];
+      } else {
+        selectedSectionNotifier.value = null;
+      }
     }
   }
 
