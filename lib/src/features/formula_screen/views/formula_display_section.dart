@@ -14,7 +14,7 @@ class FormulaDisplaySection extends StatelessWidget {
     return Consumer<DBManager>(
       builder: (context, manager, child) {
         return SizedBox(
-          height: 55,
+          height: 70,
           child: Row(
             children: [
               Expanded(
@@ -25,7 +25,7 @@ class FormulaDisplaySection extends StatelessWidget {
                     controller: controller,
                     scrollDirection: Axis.horizontal,
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 20, vertical: 3),
+                        const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                     children: [
                       ...manager.formulasMap[formulaName]!.formulaDetails.map(
                         (InlineSpan span) => Center(

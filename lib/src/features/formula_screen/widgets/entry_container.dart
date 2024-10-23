@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:formulator/src/entities/db_manager/db_manager.dart';
 import 'package:formulator/src/entities/models/entry.dart';
+import 'package:formulator/src/entities/models/formula.dart';
+import 'package:formulator/src/entities/models/section.dart';
+import 'package:formulator/src/entities/models/sub_section.dart';
 import 'package:formulator/src/utils/extensions/number_extension.dart';
 import 'package:formulator/src/utils/widgets/more_button.dart';
+import 'package:provider/provider.dart';
 
 class EntryContainer extends StatefulWidget {
   final String formulaName;
@@ -74,6 +79,8 @@ class _EntryContainerState extends State<EntryContainer> {
                 width: column2Width,
                 child: _NumberInputField(
                   controller: valueController,
+                  onChanged: (String? newString) =>
+                      _onEdit(context, newString, _EditedVariable.value),
                 ),
               ),
               SizedBox(width: space3Width),
@@ -81,6 +88,8 @@ class _EntryContainerState extends State<EntryContainer> {
                 width: column2Width,
                 child: _NumberInputField(
                   controller: refValueController,
+                  onChanged: (String? newString) =>
+                      _onEdit(context, newString, _EditedVariable.refValue),
                 ),
               ),
               SizedBox(width: space3Width),
@@ -88,6 +97,8 @@ class _EntryContainerState extends State<EntryContainer> {
                 width: column2Width,
                 child: _NumberInputField(
                   controller: weightController,
+                  onChanged: (String? newString) =>
+                      _onEdit(context, newString, _EditedVariable.weight),
                 ),
               ),
               const SizedBox(width: space4Width),
@@ -107,7 +118,87 @@ class _EntryContainerState extends State<EntryContainer> {
       ],
     );
   }
+
+  void _onEdit(
+    BuildContext context,
+    String? newString,
+    _EditedVariable variable,
+  ) {
+    final Formula initialFormula =
+        context.read<DBManager>().formulasMap[widget.formulaName]!;
+
+    final List<Section> newSections = [...initialFormula.sections];
+    final Section sectionToEdit =
+        newSections.firstWhere((section) => section.name == widget.sectionName);
+    final SubSection subSectionToEdit = sectionToEdit.subsections
+        .firstWhere((sub) => sub.name == widget.subSectionName);
+    final Entry entryToEdit = subSectionToEdit.entries
+        .firstWhere((entry) => entry.name == widget.entry.name);
+
+    final int sectionIndex =
+        newSections.indexWhere((section) => section.name == widget.sectionName);
+    final int subSectionIndex = newSections[sectionIndex]
+        .subsections
+        .indexWhere((sub) => sub.name == widget.subSectionName);
+    final int entryIndex = newSections[sectionIndex]
+        .subsections[subSectionIndex]
+        .entries
+        .indexWhere((entry) => entry.name == widget.entry.name);
+    late final Entry newEntry;
+    switch (variable) {
+      case _EditedVariable.value:
+        newEntry = entryToEdit.copyWith(
+          value: double.parse(
+              newString == '' || newString == null ? '0' : newString),
+        );
+        break;
+      case _EditedVariable.refValue:
+        newEntry = entryToEdit.copyWith(
+          referenceValue: double.parse(
+              newString == '' || newString == null ? '0' : newString),
+        );
+        break;
+      case _EditedVariable.weight:
+        newEntry = entryToEdit.copyWith(
+          weight: double.parse(
+              newString == '' || newString == null ? '0' : newString),
+        );
+        break;
+    }
+    newSections.replaceRange(
+      sectionIndex,
+      sectionIndex + 1,
+      [
+        sectionToEdit.copyWith(
+          subsections: sectionToEdit.subsections
+            ..replaceRange(
+              subSectionIndex,
+              subSectionIndex + 1,
+              [
+                subSectionToEdit.copyWith(
+                  entries: subSectionToEdit.entries
+                    ..replaceRange(
+                      entryIndex,
+                      entryIndex + 1,
+                      [newEntry],
+                    ),
+                ),
+              ],
+            ),
+        ),
+      ],
+    );
+
+    final Formula editedFormula =
+        initialFormula.copyWith(sections: newSections);
+    context.read<DBManager>().replaceFormula(
+          formulaNameToReplace: editedFormula.name,
+          replacementFormula: editedFormula,
+        );
+  }
 }
+
+enum _EditedVariable { value, refValue, weight }
 
 class EntryReference extends StatelessWidget {
   const EntryReference({super.key});
@@ -164,10 +255,11 @@ class EntryReference extends StatelessWidget {
 
 class _NumberInputField extends StatelessWidget {
   final TextEditingController controller;
+  final Function(String?) onChanged;
 
   const _NumberInputField({
-    super.key,
     required this.controller,
+    required this.onChanged,
   });
 
   @override
@@ -184,7 +276,7 @@ class _NumberInputField extends StatelessWidget {
         border: OutlineInputBorder(),
         contentPadding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       ),
-      onChanged: (String? newValue) {},
+      onChanged: onChanged,
     );
   }
 }
