@@ -1,3 +1,4 @@
+import 'package:formulator/src/entities/models/entry.dart';
 import 'package:formulator/src/entities/models/section.dart';
 import 'package:formulator/src/entities/models/sub_section.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -23,6 +24,24 @@ class Formula {
         sections.firstWhere((section) => section.name == sectionNameToCheck);
     for (SubSection subsection in sectionToCheck.subsections) {
       if (subsection.name == nameToCheck) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// To check if an entry name already exists in a sub-section
+  bool doesEntryExistInSubSection(
+    String nameToCheck,
+    String sectionNameToCheck,
+    String subSectionNameToCheck,
+  ) {
+    Section sectionToCheck =
+        sections.firstWhere((section) => section.name == sectionNameToCheck);
+    SubSection subSection = sectionToCheck.subsections
+        .firstWhere((subSection) => subSection.name == subSectionNameToCheck);
+    for (Entry entry in subSection.entries) {
+      if (entry.name == nameToCheck) {
         return true;
       }
     }

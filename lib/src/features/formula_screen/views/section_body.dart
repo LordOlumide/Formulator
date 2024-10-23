@@ -30,6 +30,8 @@ class SectionBody extends StatelessWidget {
               children: [
                 for (int i = 0; i < subSections.length; i++)
                   SubsectionContainer(
+                    formulaName: formulaName,
+                    sectionName: section.name,
                     subSection: section.subsections[i],
                   ),
               ],

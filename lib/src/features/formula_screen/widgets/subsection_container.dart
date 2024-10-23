@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:formulator/src/entities/db_manager/db_manager.dart';
+import 'package:formulator/src/entities/models/entry.dart';
+import 'package:formulator/src/entities/models/formula.dart';
+import 'package:formulator/src/entities/models/section.dart';
 import 'package:formulator/src/entities/models/sub_section.dart';
 import 'package:formulator/src/features/formula_screen/widgets/entry_container.dart';
+import 'package:formulator/src/features/formula_screen/widgets/entry_dialog.dart';
+import 'package:formulator/src/utils/functions/show_snackbar.dart';
+import 'package:formulator/src/utils/widgets/more_button.dart';
+import 'package:provider/provider.dart';
 
 class SubsectionContainer extends StatelessWidget {
+  final String formulaName;
+  final String sectionName;
   final SubSection subSection;
 
-  const SubsectionContainer({super.key, required this.subSection});
+  const SubsectionContainer({
+    super.key,
+    required this.formulaName,
+    required this.sectionName,
+    required this.subSection,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +55,16 @@ class SubsectionContainer extends StatelessWidget {
                   style: const TextStyle(fontSize: 17, color: Colors.white),
                 ),
               ),
+              const Spacer(),
+              MoreButton(
+                options: [
+                  MenuOption(
+                    optionName: 'Add Entry',
+                    icon: Icons.add,
+                    function: () => _addEntry(context),
+                  ),
+                ],
+              ),
             ],
           ),
           const SizedBox(height: 8),
@@ -48,5 +73,59 @@ class SubsectionContainer extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _addEntry(BuildContext context) async {
+    final Formula initialFormula =
+        context.read<DBManager>().formulasMap[formulaName]!;
+
+    late final Map<String, dynamic>? map;
+
+    if (context.mounted) {
+      map = await showDialog(
+        context: context,
+        builder: (context) {
+          return const EntryDialog();
+        },
+      );
+    }
+    if (map == null || map.isEmpty) return;
+
+    if (context.mounted) {
+      if (initialFormula.doesEntryExistInSubSection(
+        map['name']!,
+        sectionName,
+        subSection.name,
+      )) {
+        UtilFunctions.showSnackBar(
+          context,
+          'Entry already exists with this name!',
+        );
+        return;
+      }
+    }
+
+    final List<Section> newSections = [...initialFormula.sections];
+    final SubSection sub = newSections
+        .firstWhere((section) => section.name == sectionName)
+        .subsections
+        .firstWhere((subSection) => subSection.name == subSection.name);
+    sub.entries.add(
+      Entry(
+        name: map['name'],
+        value: double.parse(map['value']),
+        referenceValue: double.parse(map['ref_value']),
+        weight: double.parse(map['weight']),
+      ),
+    );
+
+    if (context.mounted) {
+      final Formula editedFormula =
+          initialFormula.copyWith(sections: newSections);
+      context.read<DBManager>().replaceFormula(
+            formulaNameToReplace: editedFormula.name,
+            replacementFormula: editedFormula,
+          );
+    }
   }
 }
