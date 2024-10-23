@@ -129,7 +129,7 @@ class EntryReference extends StatelessWidget {
           width: column1Width,
           child: const Text(
             'Entry Name',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.w500),
           ),
         ),
         const SizedBox(width: space2Width),
@@ -137,7 +137,7 @@ class EntryReference extends StatelessWidget {
           width: column2Width,
           child: const Text(
             'Value',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.w500),
           ),
         ),
         SizedBox(width: space3Width),
@@ -145,7 +145,7 @@ class EntryReference extends StatelessWidget {
           width: column2Width,
           child: const Text(
             'Reference',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.w500),
           ),
         ),
         SizedBox(width: space3Width),
@@ -153,7 +153,7 @@ class EntryReference extends StatelessWidget {
           width: column2Width,
           child: const Text(
             'Weight',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.w500),
           ),
         ),
         const SizedBox(width: space4Width),

@@ -38,6 +38,8 @@ class SectionHeaders extends StatelessWidget {
                       isSelected: formula.sections[i].name == selectedName,
                       sectionName: formula.sections[i].name,
                       sectionWeight: formula.sections[i].weight,
+                      subSectionTotalWeight:
+                          formula.sections[i].totalSubSectionWeight,
                       onTap: () => selectedSectionNotifier.value =
                           formula.sections[i].name,
                       onAddSubSectionPressed: () => _addNewSubSection(

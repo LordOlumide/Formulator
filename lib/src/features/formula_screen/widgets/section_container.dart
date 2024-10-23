@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:formulator/src/utils/extensions/number_extension.dart';
 import 'package:formulator/src/utils/widgets/more_button.dart';
 
 class SectionContainer extends StatelessWidget {
   final bool isSelected;
   final String sectionName;
   final double sectionWeight;
+  final double subSectionTotalWeight;
   final VoidCallback onTap;
   final VoidCallback onAddSubSectionPressed;
   final VoidCallback onEditSectionPressed;
@@ -15,6 +17,7 @@ class SectionContainer extends StatelessWidget {
     required this.isSelected,
     required this.sectionName,
     required this.sectionWeight,
+    required this.subSectionTotalWeight,
     required this.onTap,
     required this.onAddSubSectionPressed,
     required this.onEditSectionPressed,
@@ -26,10 +29,11 @@ class SectionContainer extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        height: 45,
         padding: const EdgeInsets.fromLTRB(12, 3, 8, 3),
         margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue : Colors.white,
+          color: isSelected ? Colors.blue : Colors.transparent,
           border: Border.all(color: Colors.blue, width: 3),
           borderRadius: const BorderRadius.only(
             topRight: Radius.circular(9),
@@ -57,7 +61,8 @@ class SectionContainer extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
-                sectionWeight.toString(),
+                '${sectionWeight.formatToString.toString()} '
+                '(${subSectionTotalWeight.formatToString.toString()})',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.normal,
@@ -65,27 +70,29 @@ class SectionContainer extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 5),
-            MoreButton(
-              options: [
-                MenuOption(
-                  optionName: 'Add New Sub-Section',
-                  icon: Icons.add_box_outlined,
-                  function: onAddSubSectionPressed,
-                ),
-                MenuOption(
-                  optionName: 'Edit Section',
-                  icon: Icons.drive_file_rename_outline,
-                  function: onEditSectionPressed,
-                ),
-                MenuOption(
-                  optionName: 'Delete Section',
-                  icon: Icons.delete_forever,
-                  function: onDeleteSectionPressed,
-                  color: Colors.red,
-                ),
-              ],
-            ),
+            const SizedBox(width: 10),
+            isSelected
+                ? MoreButton(
+                    options: [
+                      MenuOption(
+                        optionName: 'Add New Sub-Section',
+                        icon: Icons.add_box_outlined,
+                        function: onAddSubSectionPressed,
+                      ),
+                      MenuOption(
+                        optionName: 'Edit Section',
+                        icon: Icons.drive_file_rename_outline,
+                        function: onEditSectionPressed,
+                      ),
+                      MenuOption(
+                        optionName: 'Delete Section',
+                        icon: Icons.delete_forever,
+                        function: onDeleteSectionPressed,
+                        color: Colors.red,
+                      ),
+                    ],
+                  )
+                : const SizedBox.shrink(),
           ],
         ),
       ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:formulator/src/entities/db_manager/db_manager.dart';
 import 'package:formulator/src/entities/models/formula.dart';
 import 'package:formulator/src/entities/models/section.dart';
-import 'package:formulator/src/entities/models/sub_section.dart';
 import 'package:formulator/src/features/formula_screen/formula_screen.dart';
 import 'package:formulator/src/features/home_screen/widgets/create_rename_formula_dialog.dart';
 import 'package:formulator/src/features/home_screen/widgets/formula_container.dart';
@@ -118,9 +117,7 @@ class HomeScreen extends StatelessWidget {
           const Section(
             name: 'Section 1',
             weight: 1,
-            subsections: [
-              SubSection(name: 'Sub-Section 1', weight: 1, entries: []),
-            ],
+            subsections: [],
           ),
         ],
       );

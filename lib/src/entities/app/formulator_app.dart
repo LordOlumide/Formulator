@@ -19,8 +19,11 @@ class _FormulatorAppState extends State<FormulatorApp> {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Formulator',
+      theme: Theme.of(context).copyWith(
+        scaffoldBackgroundColor: const Color(0xFFF3F3F3),
+      ),
       home: HomeScreen(),
     );
   }

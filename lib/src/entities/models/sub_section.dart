@@ -14,6 +14,21 @@ class SubSection {
   @HiveField(2)
   final List<Entry> entries;
 
+  double get totalEntriesWeight =>
+      entries.fold(0, (prev, element) => prev + element.weight);
+
+  double get answer {
+    if (entries.isNotEmpty) {
+      return entries.fold<double>(
+            0.0,
+            (prev, element) => prev + (element.weight * element.answer),
+          ) /
+          entries.length;
+    } else {
+      return 0;
+    }
+  }
+
   const SubSection({
     required this.name,
     required this.weight,

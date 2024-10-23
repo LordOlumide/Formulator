@@ -16,6 +16,8 @@ class Entry {
   @HiveField(3)
   final double weight;
 
+  double get answer => value / referenceValue;
+
   const Entry({
     required this.name,
     required this.value,

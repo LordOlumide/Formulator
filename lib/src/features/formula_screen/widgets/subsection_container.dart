@@ -7,6 +7,7 @@ import 'package:formulator/src/entities/models/sub_section.dart';
 import 'package:formulator/src/features/formula_screen/widgets/entry_container.dart';
 import 'package:formulator/src/features/formula_screen/widgets/entry_dialog.dart';
 import 'package:formulator/src/features/home_screen/widgets/yes_no_choice_dialog.dart';
+import 'package:formulator/src/utils/extensions/number_extension.dart';
 import 'package:formulator/src/utils/functions/show_snackbar.dart';
 import 'package:formulator/src/utils/widgets/more_button.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +43,8 @@ class SubsectionContainer extends StatelessWidget {
               Text(
                 subSection.name,
                 style: const TextStyle(
-                  fontSize: 17,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(width: 20),
@@ -52,7 +54,8 @@ class SubsectionContainer extends StatelessWidget {
                   color: Colors.black38,
                 ),
                 child: Text(
-                  subSection.weight.toString(),
+                  '${subSection.weight.formatToString.toString()} '
+                  '(${subSection.totalEntriesWeight.formatToString})',
                   style: const TextStyle(fontSize: 17, color: Colors.white),
                 ),
               ),
@@ -118,7 +121,7 @@ class SubsectionContainer extends StatelessWidget {
     final SubSection sub = newSections
         .firstWhere((section) => section.name == sectionName)
         .subsections
-        .firstWhere((subSection) => subSection.name == subSection.name);
+        .firstWhere((element) => element.name == subSection.name);
     sub.entries.add(
       Entry(
         name: map['name'],
