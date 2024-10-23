@@ -6,6 +6,7 @@ import 'package:formulator/src/entities/models/section.dart';
 import 'package:formulator/src/entities/models/sub_section.dart';
 import 'package:formulator/src/features/formula_screen/widgets/entry_container.dart';
 import 'package:formulator/src/features/formula_screen/widgets/entry_dialog.dart';
+import 'package:formulator/src/features/home_screen/widgets/yes_no_choice_dialog.dart';
 import 'package:formulator/src/utils/functions/show_snackbar.dart';
 import 'package:formulator/src/utils/widgets/more_button.dart';
 import 'package:provider/provider.dart';
@@ -75,6 +76,8 @@ class SubsectionContainer extends StatelessWidget {
               sectionName: sectionName,
               subSectionName: subSection.name,
               entry: subSection.entries[i],
+              deleteEntry: () =>
+                  _deleteEntry(context, subSection.entries[i].name),
             ),
         ],
       ),
@@ -124,6 +127,46 @@ class SubsectionContainer extends StatelessWidget {
         weight: double.parse(map['weight']),
       ),
     );
+
+    if (context.mounted) {
+      final Formula editedFormula =
+          initialFormula.copyWith(sections: newSections);
+      context.read<DBManager>().replaceFormula(
+            formulaNameToReplace: editedFormula.name,
+            replacementFormula: editedFormula,
+          );
+    }
+  }
+
+  Future<void> _deleteEntry(
+      BuildContext context, String entryNameToDelete) async {
+    final Formula initialFormula =
+        context.read<DBManager>().formulasMap[formulaName]!;
+
+    late final bool? shouldDeleteEntry;
+
+    if (context.mounted) {
+      shouldDeleteEntry = await showDialog(
+        context: context,
+        builder: (context) {
+          return YesNoChoiceDialog(
+            title: 'Delete Entry?',
+            question: 'Are you sure you want to permanently delete '
+                'the "$entryNameToDelete" section?',
+            noColor: Colors.black87,
+            yesColor: Colors.red,
+          );
+        },
+      );
+    }
+    if (shouldDeleteEntry == null || shouldDeleteEntry == false) return;
+
+    final List<Section> newSections = [...initialFormula.sections];
+    final SubSection sub = newSections
+        .firstWhere((section) => section.name == sectionName)
+        .subsections
+        .firstWhere((subSection) => subSection.name == subSection.name);
+    sub.entries.removeWhere((entry) => entry.name == entryNameToDelete);
 
     if (context.mounted) {
       final Formula editedFormula =

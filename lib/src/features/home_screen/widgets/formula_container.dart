@@ -30,7 +30,7 @@ class FormulaContainer extends StatelessWidget {
               Text(
                 text,
                 style: const TextStyle(
-                  fontSize: 25,
+                  fontSize: 21,
                   fontWeight: FontWeight.w400,
                   color: Colors.white,
                 ),

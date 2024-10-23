@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:formulator/src/entities/models/entry.dart';
 import 'package:formulator/src/utils/extensions/number_extension.dart';
+import 'package:formulator/src/utils/widgets/more_button.dart';
 
 class EntryContainer extends StatefulWidget {
   final String formulaName;
   final String sectionName;
   final String subSectionName;
   final Entry entry;
+  final VoidCallback deleteEntry;
 
   const EntryContainer({
     super.key,
@@ -15,6 +17,7 @@ class EntryContainer extends StatefulWidget {
     required this.formulaName,
     required this.sectionName,
     required this.subSectionName,
+    required this.deleteEntry,
   });
 
   @override
@@ -50,7 +53,7 @@ class _EntryContainerState extends State<EntryContainer> {
     const double space2Width = 10;
     final double column2Width = screenWidth / 8;
     final double space3Width = screenWidth / 15;
-    const double space4Width = 10;
+    const double space4Width = 15;
 
     return Column(
       children: [
@@ -88,6 +91,16 @@ class _EntryContainerState extends State<EntryContainer> {
                 ),
               ),
               const SizedBox(width: space4Width),
+              MoreButton(
+                options: [
+                  MenuOption(
+                    optionName: 'Delete Entry',
+                    icon: Icons.delete_outline,
+                    color: Colors.red,
+                    function: widget.deleteEntry,
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -107,7 +120,7 @@ class EntryReference extends StatelessWidget {
     const double space2Width = 10;
     final double column2Width = screenWidth / 8;
     final double space3Width = screenWidth / 15;
-    const double space4Width = 10;
+    const double space4Width = 15;
 
     return Row(
       children: [

@@ -16,6 +16,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.sizeOf(context).width;
+
     return Scaffold(
       body: Center(
         child: SizedBox(
@@ -52,19 +54,24 @@ class HomeScreen extends StatelessWidget {
                         SizedBox(
                           width: 40,
                           child: PrimaryButton(
-                            margin: const EdgeInsets.symmetric(horizontal: 160),
+                            margin: EdgeInsets.symmetric(
+                              horizontal: screenWidth / 10,
+                            ),
                             onPressed: () =>
                                 _onCreateNewFormulaPressed(context),
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 30,
-                              vertical: 15,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: screenWidth / 40,
+                              vertical: 10,
                             ),
-                            child: const Text(
-                              'Create New Formula',
-                              style: TextStyle(
-                                fontSize: 26,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
+                            child: const FittedBox(
+                              child: Text(
+                                'Create New Formula',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
