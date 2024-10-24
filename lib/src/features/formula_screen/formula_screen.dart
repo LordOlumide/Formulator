@@ -105,31 +105,46 @@ class _FormulaScreenState extends State<FormulaScreen> {
           ],
         ),
       ),
-      body: Scrollbar(
-        controller: vertController,
-        thumbVisibility: true,
-        child: SingleChildScrollView(
-          controller: vertController,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FormulaDisplaySection(
-                controller: horizFormulaController,
-                formulaName: widget.formulaName,
+      body: Padding(
+        padding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            FormulaDisplaySection(
+              controller: horizFormulaController,
+              formulaName: widget.formulaName,
+            ),
+            const SizedBox(height: 4),
+            SectionHeaders(
+              formulaName: widget.formulaName,
+              selectedSectionNotifier: selectedSectionNotifier,
+              resetSelectedNotifier: resetSelectedNotifier,
+            ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.blue.withOpacity(0.04),
+                  border: Border.all(),
+                  borderRadius: BorderRadius.circular(3),
+                ),
+                child: Scrollbar(
+                  controller: vertController,
+                  thumbVisibility: true,
+                  thickness: 20,
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.only(bottom: 50, right: 20),
+                    controller: vertController,
+                    child: SectionBody(
+                      formulaName: widget.formulaName,
+                      selectedSectionNotifier: selectedSectionNotifier,
+                    ),
+                  ),
+                ),
               ),
-              const SizedBox(height: 4),
-              SectionHeaders(
-                formulaName: widget.formulaName,
-                selectedSectionNotifier: selectedSectionNotifier,
-                resetSelectedNotifier: resetSelectedNotifier,
-              ),
-              const SizedBox(height: 8),
-              SectionBody(
-                formulaName: widget.formulaName,
-                selectedSectionNotifier: selectedSectionNotifier,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

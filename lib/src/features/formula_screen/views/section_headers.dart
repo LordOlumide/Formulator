@@ -26,47 +26,45 @@ class SectionHeaders extends StatelessWidget {
     return Consumer<DBManager>(
       builder: (BuildContext context, DBManager manager, Widget? child) {
         final Formula formula = manager.formulasMap[formulaName]!;
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Wrap(
-            children: [
-              for (int i = 0; i < formula.sections.length; i++)
-                ValueListenableBuilder<String?>(
-                  valueListenable: selectedSectionNotifier,
-                  builder: (context, selectedName, child) {
-                    return SectionContainer(
-                      isSelected: formula.sections[i].name == selectedName,
-                      sectionName: formula.sections[i].name,
-                      sectionWeight: formula.sections[i].weight,
-                      subSectionTotalWeight:
-                          formula.sections[i].totalSubSectionWeight,
-                      onTap: () => selectedSectionNotifier.value =
-                          formula.sections[i].name,
-                      onAddSubSectionPressed: () => _addNewSubSection(
-                        context,
-                        formula,
+        return Wrap(
+          children: [
+            for (int i = 0; i < formula.sections.length; i++)
+              ValueListenableBuilder<String?>(
+                valueListenable: selectedSectionNotifier,
+                builder: (context, selectedName, child) {
+                  return SectionContainer(
+                    isSelected: formula.sections[i].name == selectedName,
+                    sectionName: formula.sections[i].name,
+                    sectionWeight: formula.sections[i].weight,
+                    subSectionTotalWeight:
+                        formula.sections[i].totalSubSectionWeight,
+                    sectionAnswer: formula.sections[i].answer,
+                    onTap: () => selectedSectionNotifier.value =
                         formula.sections[i].name,
-                      ),
-                      onEditSectionPressed: () => _editSection(
-                        context: context,
-                        initialFormula: formula,
-                        initialSectionName: formula.sections[i].name,
-                      ),
-                      onDeleteSectionPressed: () => _deleteSection(
-                        context: context,
-                        initialFormula: formula,
-                        sectionToDeleteName: formula.sections[i].name,
-                      ),
-                    );
-                  },
-                ),
-              IconButton(
-                color: Colors.blue,
-                onPressed: () => _addNewSection(context, formula),
-                icon: const Icon(Icons.add),
+                    onAddSubSectionPressed: () => _addNewSubSection(
+                      context,
+                      formula,
+                      formula.sections[i].name,
+                    ),
+                    onEditSectionPressed: () => _editSection(
+                      context: context,
+                      initialFormula: formula,
+                      initialSectionName: formula.sections[i].name,
+                    ),
+                    onDeleteSectionPressed: () => _deleteSection(
+                      context: context,
+                      initialFormula: formula,
+                      sectionToDeleteName: formula.sections[i].name,
+                    ),
+                  );
+                },
               ),
-            ],
-          ),
+            IconButton(
+              color: Colors.blue,
+              onPressed: () => _addNewSection(context, formula),
+              icon: const Icon(Icons.add),
+            ),
+          ],
         );
       },
     );

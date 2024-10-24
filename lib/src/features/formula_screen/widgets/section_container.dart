@@ -7,6 +7,7 @@ class SectionContainer extends StatelessWidget {
   final String sectionName;
   final double sectionWeight;
   final double subSectionTotalWeight;
+  final double sectionAnswer;
   final VoidCallback onTap;
   final VoidCallback onAddSubSectionPressed;
   final VoidCallback onEditSectionPressed;
@@ -18,6 +19,7 @@ class SectionContainer extends StatelessWidget {
     required this.sectionName,
     required this.sectionWeight,
     required this.subSectionTotalWeight,
+    required this.sectionAnswer,
     required this.onTap,
     required this.onAddSubSectionPressed,
     required this.onEditSectionPressed,
@@ -26,15 +28,21 @@ class SectionContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ans = sectionAnswer == sectionAnswer.toInt()
+        ? sectionAnswer.formatToString
+        : sectionAnswer.toStringAsFixed(5);
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 45,
+        height: 60,
+        constraints: BoxConstraints(maxWidth: 250),
         padding: const EdgeInsets.fromLTRB(12, 3, 8, 3),
         margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
         decoration: BoxDecoration(
           color: isSelected ? Colors.blue : Colors.transparent,
-          border: Border.all(color: Colors.blue, width: 3),
+          border: Border.all(
+              color: isSelected ? Colors.blue : Colors.black, width: 1),
           borderRadius: const BorderRadius.only(
             topRight: Radius.circular(9),
             topLeft: Radius.circular(9),
@@ -42,57 +50,76 @@ class SectionContainer extends StatelessWidget {
             bottomLeft: Radius.circular(4),
           ),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Expanded(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    child: Text(
+                      sectionName,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                        color: isSelected ? Colors.white : Colors.black,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
+                    decoration: BoxDecoration(
+                      color: Colors.black38,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      '${sectionWeight.formatToString.toString()} '
+                      '(${subSectionTotalWeight.formatToString.toString()})',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  isSelected
+                      ? MoreButton(
+                          options: [
+                            MenuOption(
+                              optionName: 'Add New Sub-Section',
+                              icon: Icons.add_box_outlined,
+                              function: onAddSubSectionPressed,
+                            ),
+                            MenuOption(
+                              optionName: 'Edit Section',
+                              icon: Icons.drive_file_rename_outline,
+                              function: onEditSectionPressed,
+                            ),
+                            MenuOption(
+                              optionName: 'Delete Section',
+                              icon: Icons.delete_forever,
+                              function: onDeleteSectionPressed,
+                              color: Colors.red,
+                            ),
+                          ],
+                        )
+                      : const SizedBox.shrink(),
+                ],
+              ),
+            ),
             Text(
-              sectionName,
+              'Sub-total: $ans',
               style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-                color: isSelected ? Colors.white : Colors.blue,
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+                color: isSelected ? Colors.white : Colors.black,
               ),
-            ),
-            const SizedBox(width: 10),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
-              decoration: BoxDecoration(
-                color: isSelected ? Colors.black38 : Colors.blue.shade400,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Text(
-                '${sectionWeight.formatToString.toString()} '
-                '(${subSectionTotalWeight.formatToString.toString()})',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.normal,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            const SizedBox(width: 10),
-            isSelected
-                ? MoreButton(
-                    options: [
-                      MenuOption(
-                        optionName: 'Add New Sub-Section',
-                        icon: Icons.add_box_outlined,
-                        function: onAddSubSectionPressed,
-                      ),
-                      MenuOption(
-                        optionName: 'Edit Section',
-                        icon: Icons.drive_file_rename_outline,
-                        function: onEditSectionPressed,
-                      ),
-                      MenuOption(
-                        optionName: 'Delete Section',
-                        icon: Icons.delete_forever,
-                        function: onDeleteSectionPressed,
-                        color: Colors.red,
-                      ),
-                    ],
-                  )
-                : const SizedBox.shrink(),
+            )
           ],
         ),
       ),

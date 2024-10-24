@@ -22,7 +22,7 @@ class _FormulatorAppState extends State<FormulatorApp> {
     return MaterialApp(
       title: 'Formulator',
       theme: Theme.of(context).copyWith(
-        scaffoldBackgroundColor: const Color(0xFFF3F3F3),
+        scaffoldBackgroundColor: const Color(0xFFF6F6F6),
       ),
       home: HomeScreen(),
     );

@@ -5,7 +5,9 @@ import 'package:formulator/src/entities/models/entry.dart';
 import 'package:formulator/src/entities/models/formula.dart';
 import 'package:formulator/src/entities/models/section.dart';
 import 'package:formulator/src/entities/models/sub_section.dart';
+import 'package:formulator/src/features/formula_screen/widgets/entry_name_only_dialog.dart';
 import 'package:formulator/src/utils/extensions/number_extension.dart';
+import 'package:formulator/src/utils/functions/show_snackbar.dart';
 import 'package:formulator/src/utils/widgets/more_button.dart';
 import 'package:provider/provider.dart';
 
@@ -56,14 +58,15 @@ class _EntryContainerState extends State<EntryContainer> {
     const double space1Width = 14;
     final double column1Width = screenWidth / 3;
     const double space2Width = 10;
-    final double column2Width = screenWidth / 8;
-    final double space3Width = screenWidth / 15;
-    const double space4Width = 15;
+    final double column2Width = screenWidth / 10;
+    final double space3Width = screenWidth / 33;
+    const double space4Width = 5;
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          height: 40,
+          height: 32,
           child: Row(
             children: [
               const SizedBox(width: space1Width),
@@ -71,10 +74,21 @@ class _EntryContainerState extends State<EntryContainer> {
                 width: column1Width,
                 child: Text(
                   widget.entry.name,
-                  style: const TextStyle(),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(height: 1.1),
                 ),
               ),
               const SizedBox(width: space2Width),
+              SizedBox(
+                width: column2Width,
+                child: _NumberInputField(
+                  controller: weightController,
+                  onChanged: (String? newString) =>
+                      _onEdit(context, newString, _EditedVariable.weight),
+                ),
+              ),
+              SizedBox(width: space3Width),
               SizedBox(
                 width: column2Width,
                 child: _NumberInputField(
@@ -95,15 +109,20 @@ class _EntryContainerState extends State<EntryContainer> {
               SizedBox(width: space3Width),
               SizedBox(
                 width: column2Width,
-                child: _NumberInputField(
-                  controller: weightController,
-                  onChanged: (String? newString) =>
-                      _onEdit(context, newString, _EditedVariable.weight),
+                child: Text(
+                  widget.entry.answer.formatToString,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 16),
                 ),
               ),
               const SizedBox(width: space4Width),
               MoreButton(
                 options: [
+                  MenuOption(
+                    optionName: 'Rename Entry',
+                    icon: Icons.edit,
+                    function: () => _onRenamePressed(context),
+                  ),
                   MenuOption(
                     optionName: 'Delete Entry',
                     icon: Icons.delete_outline,
@@ -117,6 +136,24 @@ class _EntryContainerState extends State<EntryContainer> {
         ),
       ],
     );
+  }
+
+  Future<void> _onRenamePressed(BuildContext context) async {
+    late final String? newName;
+
+    if (context.mounted) {
+      newName = await showDialog(
+        context: context,
+        builder: (context) {
+          return EntryNameOnlyDialog(initialName: widget.entry.name);
+        },
+      );
+    }
+    if (newName == null || newName.isEmpty) return;
+
+    if (context.mounted) {
+      _onEdit(context, newName, _EditedVariable.name);
+    }
   }
 
   void _onEdit(
@@ -146,6 +183,17 @@ class _EntryContainerState extends State<EntryContainer> {
         .indexWhere((entry) => entry.name == widget.entry.name);
     late final Entry newEntry;
     switch (variable) {
+      case _EditedVariable.name:
+        if (initialFormula.doesEntryExistInSubSection(
+            newString!, sectionToEdit.name, subSectionToEdit.name)) {
+          UtilFunctions.showSnackBar(
+            context,
+            'Entry already exists with this name!',
+          );
+          return;
+        }
+        newEntry = entryToEdit.copyWith(name: newString);
+        break;
       case _EditedVariable.value:
         newEntry = entryToEdit.copyWith(
           value: double.parse(
@@ -198,7 +246,7 @@ class _EntryContainerState extends State<EntryContainer> {
   }
 }
 
-enum _EditedVariable { value, refValue, weight }
+enum _EditedVariable { name, value, refValue, weight }
 
 class EntryReference extends StatelessWidget {
   const EntryReference({super.key});
@@ -209,9 +257,9 @@ class EntryReference extends StatelessWidget {
     const double space1Width = 14;
     final double column1Width = screenWidth / 3;
     const double space2Width = 10;
-    final double column2Width = screenWidth / 8;
-    final double space3Width = screenWidth / 15;
-    const double space4Width = 15;
+    final double column2Width = screenWidth / 10;
+    final double space3Width = screenWidth / 33;
+    const double space4Width = 5;
 
     return Row(
       children: [
@@ -224,6 +272,14 @@ class EntryReference extends StatelessWidget {
           ),
         ),
         const SizedBox(width: space2Width),
+        SizedBox(
+          width: column2Width,
+          child: const Text(
+            'Weight',
+            style: TextStyle(fontWeight: FontWeight.w500),
+          ),
+        ),
+        SizedBox(width: space3Width),
         SizedBox(
           width: column2Width,
           child: const Text(
@@ -243,7 +299,7 @@ class EntryReference extends StatelessWidget {
         SizedBox(
           width: column2Width,
           child: const Text(
-            'Weight',
+            'Sub-total',
             style: TextStyle(fontWeight: FontWeight.w500),
           ),
         ),

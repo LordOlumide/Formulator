@@ -39,13 +39,13 @@ class FormulaDisplaySection extends StatelessWidget {
               Container(
                 width: 150,
                 padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
-                margin: const EdgeInsets.only(right: 10),
+                margin: const EdgeInsets.only(right: 5),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.blue.shade600, width: 5),
+                  border: Border.all(color: Colors.blue, width: 4),
                 ),
                 child: Center(
                   child: Text(
-                    '=${manager.formulasMap[formulaName]!.answer.toString()}',
+                    '=${(manager.formulasMap[formulaName]!.answer * 100).toStringAsFixed(4)}%',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(

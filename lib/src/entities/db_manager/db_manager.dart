@@ -18,7 +18,6 @@ class DBManager extends ChangeNotifier {
   void _refreshFormulasFromBox() {
     _activeFormulas = Map<String, Formula>.from(formulaBox.toMap());
     notifyListeners();
-    print(_activeFormulas);
   }
 
   void addFormula(Formula newFormula) {

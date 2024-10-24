@@ -4,7 +4,6 @@ import 'package:formulator/src/utils/functions/validators.dart';
 import 'package:formulator/src/utils/widgets/primary_button.dart';
 
 class EntryDialog extends StatefulWidget {
-  final bool isCreateNotEdit;
   final String? initialName;
   final double? initialValue;
   final double? initialRefValue;
@@ -12,7 +11,6 @@ class EntryDialog extends StatefulWidget {
 
   const EntryDialog({
     super.key,
-    this.isCreateNotEdit = true,
     this.initialName,
     this.initialValue,
     this.initialRefValue,
@@ -36,25 +34,6 @@ class _EntryDialogState extends State<EntryDialog> {
   final FocusNode fifthFocusNode = FocusNode();
 
   final _formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.initialName != null) {
-      nameController.text = widget.initialName!;
-    }
-    if (widget.initialValue != null) {
-      valueController.text = widget.initialValue!.toString();
-    }
-    if (widget.initialRefValue != null) {
-      refValueController.text = widget.initialRefValue!.toString();
-    }
-    if (widget.initialWeight != null) {
-      weightController.text = widget.initialWeight!.toString();
-    } else {
-      weightController.text = '1';
-    }
-  }
 
   @override
   void dispose() {
@@ -204,9 +183,9 @@ class _EntryDialogState extends State<EntryDialog> {
                 borderSide: const BorderSide(color: Colors.blue, width: 2),
                 padding:
                     const EdgeInsets.symmetric(vertical: 9, horizontal: 20),
-                child: Text(
-                  widget.isCreateNotEdit ? 'Create' : 'Edit',
-                  style: const TextStyle(
+                child: const Text(
+                  'Create',
+                  style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,

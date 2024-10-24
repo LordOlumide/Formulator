@@ -20,7 +20,7 @@ class YesNoChoiceDialog extends StatelessWidget {
     return Dialog(
       backgroundColor: Colors.lightBlue.shade50,
       insetPadding: EdgeInsets.symmetric(
-        horizontal: MediaQuery.sizeOf(context).width / 3,
+        horizontal: MediaQuery.sizeOf(context).width / 4,
       ),
       shape: RoundedRectangleBorder(
         side: const BorderSide(color: Colors.lightBlue, width: 2),
