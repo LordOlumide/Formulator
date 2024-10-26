@@ -12,6 +12,7 @@ import 'package:formulator/src/utils/widgets/more_button.dart';
 import 'package:provider/provider.dart';
 
 class EntryContainer extends StatefulWidget {
+  final int entryNo;
   final String formulaName;
   final String sectionName;
   final String subSectionName;
@@ -20,6 +21,7 @@ class EntryContainer extends StatefulWidget {
 
   const EntryContainer({
     super.key,
+    required this.entryNo,
     required this.entry,
     required this.formulaName,
     required this.sectionName,
@@ -56,10 +58,12 @@ class _EntryContainerState extends State<EntryContainer> {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.sizeOf(context).width;
     const double space1Width = 14;
-    final double column1Width = screenWidth / 3;
+    const double snWidth = 32;
+    const double space1o2Width = 1;
+    final double column1Width = screenWidth / 3.5;
     const double space2Width = 10;
     final double column2Width = screenWidth / 10;
-    final double space3Width = screenWidth / 33;
+    final double space3Width = screenWidth / 39;
     const double space4Width = 5;
 
     return Column(
@@ -70,6 +74,14 @@ class _EntryContainerState extends State<EntryContainer> {
           child: Row(
             children: [
               const SizedBox(width: space1Width),
+              SizedBox(
+                width: snWidth,
+                child: Text(
+                  '${widget.entryNo.toString()}.',
+                  style: const TextStyle(height: 1.1),
+                ),
+              ),
+              const SizedBox(width: space1o2Width),
               SizedBox(
                 width: column1Width,
                 child: Text(
@@ -110,7 +122,7 @@ class _EntryContainerState extends State<EntryContainer> {
               SizedBox(
                 width: column2Width,
                 child: Text(
-                  widget.entry.answer.formatToString,
+                  '${(widget.entry.answer * 100).toStringAsFixed(2)}%',
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: 16),
                 ),
@@ -255,15 +267,17 @@ class EntryReference extends StatelessWidget {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.sizeOf(context).width;
     const double space1Width = 14;
-    final double column1Width = screenWidth / 3;
+    const double snWidth = 32;
+    const double space1o2Width = 1;
+    final double column1Width = screenWidth / 3.5;
     const double space2Width = 10;
     final double column2Width = screenWidth / 10;
-    final double space3Width = screenWidth / 33;
+    final double space3Width = screenWidth / 39;
     const double space4Width = 5;
 
     return Row(
       children: [
-        const SizedBox(width: space1Width),
+        const SizedBox(width: space1Width + snWidth + space1o2Width),
         SizedBox(
           width: column1Width,
           child: const Text(

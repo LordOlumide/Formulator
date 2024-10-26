@@ -30,8 +30,8 @@ class SubsectionContainer extends StatelessWidget {
     late final String subSectionAnswer;
     try {
       subSectionAnswer = subSection.answer == subSection.answer.toInt()
-          ? subSection.answer.toInt().toString()
-          : subSection.answer.toStringAsFixed(4);
+          ? '${(subSection.answer.toInt() * 100).toString()}%'
+          : '${(subSection.answer * 100).toStringAsFixed(3)}%';
     } catch (e) {
       subSectionAnswer = '---';
     }
@@ -99,6 +99,7 @@ class SubsectionContainer extends StatelessWidget {
           const EntryReference(),
           for (int i = 0; i < subSection.entries.length; i++)
             EntryContainer(
+              entryNo: i + 1,
               formulaName: formulaName,
               sectionName: sectionName,
               subSectionName: subSection.name,
@@ -227,7 +228,8 @@ class SubsectionContainer extends StatelessWidget {
     if (map == null || map.isEmpty) return;
 
     if (context.mounted) {
-      if (initialFormula.doesSubExistInSection(map['name']!, sectionName)) {
+      if (map['name']! != subSection.name &&
+          initialFormula.doesSubExistInSection(map['name']!, sectionName)) {
         UtilFunctions.showSnackBar(
           context,
           'Subsection already exists with this name!',

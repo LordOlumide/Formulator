@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: SizedBox(
-          width: MediaQuery.sizeOf(context).width / 2,
+          width: MediaQuery.sizeOf(context).width / 1.5,
           // height: MediaQuery.sizeOf(context).height / 2,
           child: Column(
             children: [
@@ -40,7 +40,10 @@ class HomeScreen extends StatelessWidget {
                           Container(
                             margin: const EdgeInsets.only(bottom: 6),
                             child: FormulaContainer(
-                              text: dbManager.formulaNames[i],
+                              formulaName: dbManager.formulaNames[i],
+                              formulaAnswer: dbManager
+                                  .formulasMap[dbManager.formulaNames[i]]!
+                                  .answer,
                               onPressed: () => _onFormulaPressed(
                                   context, dbManager.formulas[i]),
                               onRenamePressed: () => _onRenamePressed(
@@ -54,7 +57,7 @@ class HomeScreen extends StatelessWidget {
                           width: 40,
                           child: PrimaryButton(
                             margin: EdgeInsets.symmetric(
-                              horizontal: screenWidth / 10,
+                              horizontal: screenWidth / 6,
                             ),
                             onPressed: () =>
                                 _onCreateNewFormulaPressed(context),

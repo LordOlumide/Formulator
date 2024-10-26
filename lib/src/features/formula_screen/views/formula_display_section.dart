@@ -44,13 +44,15 @@ class FormulaDisplaySection extends StatelessWidget {
                   border: Border.all(color: Colors.blue, width: 4),
                 ),
                 child: Center(
-                  child: Text(
-                    '=${(manager.formulasMap[formulaName]!.answer * 100).toStringAsFixed(4)}%',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 23,
-                      fontWeight: FontWeight.bold,
+                  child: FittedBox(
+                    child: Text(
+                      '=${(manager.formulasMap[formulaName]!.answer * 100).toStringAsFixed(4)}%',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 23,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

@@ -37,6 +37,15 @@ class Formula {
   List<InlineSpan> get formulaDetails {
     List<InlineSpan> spans = [];
 
+    spans.add(
+      TextSpan(
+        text: '{ ',
+        style: TextStyle(
+          fontSize: bracketFontSize + 4,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
     for (Section section in sections) {
       spans.add(
         WidgetSpan(
@@ -189,6 +198,15 @@ class Formula {
         ),
       );
     }
+    spans.add(
+      TextSpan(
+        text: ' } × 100%',
+        style: TextStyle(
+          fontSize: bracketFontSize + 4,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
 
     return spans;
   }

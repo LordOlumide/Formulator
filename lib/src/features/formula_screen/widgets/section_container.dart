@@ -28,15 +28,13 @@ class SectionContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ans = sectionAnswer == sectionAnswer.toInt()
-        ? sectionAnswer.formatToString
-        : sectionAnswer.toStringAsFixed(5);
+    final String ans = '${(sectionAnswer * 100).toStringAsFixed(3)}%';
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
         height: 60,
-        constraints: BoxConstraints(maxWidth: 250),
+        constraints: const BoxConstraints(maxWidth: 250),
         padding: const EdgeInsets.fromLTRB(12, 3, 8, 3),
         margin: const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
         decoration: BoxDecoration(
