@@ -37,6 +37,7 @@ class _EntryContainerState extends State<EntryContainer> {
   final TextEditingController valueController = TextEditingController();
   final TextEditingController refValueController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
+  final TextEditingController costPerUnitController = TextEditingController();
 
   @override
   void initState() {
@@ -44,6 +45,7 @@ class _EntryContainerState extends State<EntryContainer> {
     valueController.text = widget.entry.value.formatToString;
     refValueController.text = widget.entry.referenceValue.formatToString;
     weightController.text = widget.entry.weight.formatToString;
+    costPerUnitController.text = widget.entry.costPerUnit.formatToString;
   }
 
   @override
@@ -51,6 +53,7 @@ class _EntryContainerState extends State<EntryContainer> {
     valueController.dispose();
     refValueController.dispose();
     weightController.dispose();
+    costPerUnitController.dispose();
     super.dispose();
   }
 
@@ -116,6 +119,15 @@ class _EntryContainerState extends State<EntryContainer> {
                   controller: refValueController,
                   onChanged: (String? newString) =>
                       _onEdit(context, newString, _EditedVariable.refValue),
+                ),
+              ),
+              SizedBox(width: space3Width),
+              SizedBox(
+                width: column2Width,
+                child: _NumberInputField(
+                  controller: costPerUnitController,
+                  onChanged: (String? newString) =>
+                      _onEdit(context, newString, _EditedVariable.costPerUnit),
                 ),
               ),
               SizedBox(width: space3Width),
@@ -212,7 +224,7 @@ class _EntryContainerState extends State<EntryContainer> {
               newString == '' || newString == null ? '0' : newString),
         );
         break;
-      case _EditedVariable.refValue:
+      case (_EditedVariable.refValue):
         newEntry = entryToEdit.copyWith(
           referenceValue: double.parse(
               newString == '' || newString == null ? '0' : newString),
@@ -221,6 +233,12 @@ class _EntryContainerState extends State<EntryContainer> {
       case _EditedVariable.weight:
         newEntry = entryToEdit.copyWith(
           weight: double.parse(
+              newString == '' || newString == null ? '0' : newString),
+        );
+        break;
+      case _EditedVariable.costPerUnit:
+        newEntry = entryToEdit.copyWith(
+          costPerUnit: double.parse(
               newString == '' || newString == null ? '0' : newString),
         );
         break;
@@ -258,7 +276,7 @@ class _EntryContainerState extends State<EntryContainer> {
   }
 }
 
-enum _EditedVariable { name, value, refValue, weight }
+enum _EditedVariable { name, value, refValue, weight, costPerUnit }
 
 class EntryReference extends StatelessWidget {
   const EntryReference({super.key});
@@ -306,6 +324,14 @@ class EntryReference extends StatelessWidget {
           width: column2Width,
           child: const Text(
             'Reference',
+            style: TextStyle(fontWeight: FontWeight.w500),
+          ),
+        ),
+        SizedBox(width: space3Width),
+        SizedBox(
+          width: column2Width,
+          child: const Text(
+            'Cost per Unit',
             style: TextStyle(fontWeight: FontWeight.w500),
           ),
         ),

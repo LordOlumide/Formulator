@@ -16,6 +16,9 @@ class Entry {
   @HiveField(3)
   final double weight;
 
+  @HiveField(4)
+  final double costPerUnit;
+
   double get answer => value / referenceValue;
 
   const Entry({
@@ -23,6 +26,7 @@ class Entry {
     required this.value,
     required this.referenceValue,
     required this.weight,
+    required this.costPerUnit,
   });
 
   Entry copyWith({
@@ -30,18 +34,20 @@ class Entry {
     double? value,
     double? referenceValue,
     double? weight,
+    double? costPerUnit,
   }) {
     return Entry(
       name: name ?? this.name,
       value: value ?? this.value,
       referenceValue: referenceValue ?? this.referenceValue,
       weight: weight ?? this.weight,
+      costPerUnit: costPerUnit ?? this.costPerUnit,
     );
   }
 
   @override
   String toString() {
     return 'Entry{name: $name, value: $value, referenceValue: $referenceValue, '
-        'weight: $weight}';
+        'weight: $weight, costPerUnit: $costPerUnit}';
   }
 }

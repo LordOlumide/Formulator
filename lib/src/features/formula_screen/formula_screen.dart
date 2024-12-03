@@ -21,10 +21,19 @@ class _FormulaScreenState extends State<FormulaScreen> {
   final ScrollController vertController = ScrollController();
   final ValueNotifier<String?> selectedSectionNotifier = ValueNotifier(null);
 
+  Key _rebuildingKey = UniqueKey();
+
+  void _onChangeSelectedSection() {
+    setState(() {
+      _rebuildingKey = UniqueKey();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     resetSelectedNotifier();
+    selectedSectionNotifier.addListener(_onChangeSelectedSection);
   }
 
   void resetSelectedNotifier([String? nameOfSectionAboutToBeDeleted]) {
@@ -60,6 +69,7 @@ class _FormulaScreenState extends State<FormulaScreen> {
   void dispose() {
     horizFormulaController.dispose();
     vertController.dispose();
+    selectedSectionNotifier.removeListener(_onChangeSelectedSection);
     selectedSectionNotifier.dispose();
     super.dispose();
   }
@@ -122,6 +132,7 @@ class _FormulaScreenState extends State<FormulaScreen> {
             ),
             const SizedBox(height: 8),
             Expanded(
+              key: _rebuildingKey,
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(

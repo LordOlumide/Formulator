@@ -8,16 +8,17 @@ import 'package:formulator/src/entities/models/formula.dart';
 import 'package:formulator/src/entities/models/section.dart';
 import 'package:formulator/src/entities/models/sub_section.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:window_manager/window_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await windowManager.ensureInitialized();
   if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    await windowManager.ensureInitialized();
     WindowOptions windowOptions = const WindowOptions(
-      minimumSize: Size(800, 650),
+      minimumSize: Size(900, 650),
     );
     windowManager.waitUntilReadyToShow(windowOptions, () async {
       await windowManager.show();
@@ -25,7 +26,9 @@ void main() async {
     });
   }
 
-  await Hive.initFlutter();
+  final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
+  await Hive.initFlutter(appDocumentsDir.path);
+
   Hive.registerAdapter(FormulaAdapter());
   Hive.registerAdapter(SectionAdapter());
   Hive.registerAdapter(SubSectionAdapter());
