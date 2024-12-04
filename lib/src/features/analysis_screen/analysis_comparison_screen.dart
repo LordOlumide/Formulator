@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:formulator/src/entities/models/formula.dart';
+import 'package:formulator/src/features/analysis_screen/widgets/formula_analysis_view.dart';
 
-class AnalysisComparisonScreen extends StatelessWidget {
+class AnalysisComparisonScreen extends StatefulWidget {
   final Formula oldFormula;
   final Formula newFormula;
   final double? amountInputted;
@@ -14,6 +15,47 @@ class AnalysisComparisonScreen extends StatelessWidget {
     this.amountInputted,
     required this.amountSpent,
   });
+
+  @override
+  State<AnalysisComparisonScreen> createState() =>
+      _AnalysisComparisonScreenState();
+}
+
+class _AnalysisComparisonScreenState extends State<AnalysisComparisonScreen> {
+  final ScrollController leftScrollController = ScrollController();
+  final ScrollController rightScrollController = ScrollController();
+  final ValueNotifier<String?> selectedSectionNotifier = ValueNotifier(null);
+
+  @override
+  void initState() {
+    super.initState();
+    selectedSectionNotifier.value = widget.oldFormula.sectionNames[0];
+
+    leftScrollController.addListener(_leftControllerListener);
+    rightScrollController.addListener(_rightControllerListener);
+  }
+
+  void _leftControllerListener() {
+    setState(() {
+      rightScrollController.jumpTo(leftScrollController.offset);
+    });
+  }
+
+  void _rightControllerListener() {
+    setState(() {
+      leftScrollController.jumpTo(rightScrollController.offset);
+    });
+  }
+
+  @override
+  void dispose() {
+    leftScrollController.removeListener(_leftControllerListener);
+    rightScrollController.removeListener(_rightControllerListener);
+    leftScrollController.dispose();
+    rightScrollController.dispose();
+    selectedSectionNotifier.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +71,7 @@ class AnalysisComparisonScreen extends StatelessWidget {
             const SizedBox(width: 20),
             FittedBox(
               child: Text(
-                'Total Spent = $amountSpent',
+                'Total Spent = ${widget.amountSpent}',
                 style: const TextStyle(
                   fontSize: 23,
                   fontWeight: FontWeight.bold,
@@ -37,9 +79,9 @@ class AnalysisComparisonScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 50),
-            amountInputted != null
+            widget.amountInputted != null
                 ? Text(
-                    'Remainder = ${amountInputted! - amountSpent}',
+                    'Remainder = ${widget.amountInputted! - widget.amountSpent}',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -52,13 +94,19 @@ class AnalysisComparisonScreen extends StatelessWidget {
       body: Row(
         children: [
           Expanded(
-            child: Container(
-              color: Colors.red,
+            child: FormulaAnalysisView(
+              scrollController: leftScrollController,
+              backgroundColor: Colors.red.withOpacity(0.1),
+              formula: widget.oldFormula,
+              selectedSectionNotifier: selectedSectionNotifier,
             ),
           ),
           Expanded(
-            child: Container(
-              color: Colors.green,
+            child: FormulaAnalysisView(
+              scrollController: rightScrollController,
+              backgroundColor: Colors.green.withOpacity(0.1),
+              formula: widget.newFormula,
+              selectedSectionNotifier: selectedSectionNotifier,
             ),
           ),
         ],

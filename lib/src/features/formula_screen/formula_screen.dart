@@ -36,11 +36,11 @@ class _FormulaScreenState extends State<FormulaScreen> {
   @override
   void initState() {
     super.initState();
-    resetSelectedNotifier();
+    _resetSelectedNotifier();
     selectedSectionNotifier.addListener(_onChangeSelectedSection);
   }
 
-  void resetSelectedNotifier([String? nameOfSectionAboutToBeDeleted]) {
+  void _resetSelectedNotifier([String? nameOfSectionAboutToBeDeleted]) {
     Formula initialFormula =
         context.read<DBManager>().formulasMap[widget.formulaName]!;
     final List<String> availableSections = initialFormula.sectionNames;
@@ -152,7 +152,7 @@ class _FormulaScreenState extends State<FormulaScreen> {
             SectionHeaders(
               formulaName: widget.formulaName,
               selectedSectionNotifier: selectedSectionNotifier,
-              resetSelectedNotifier: resetSelectedNotifier,
+              resetSelectedNotifier: _resetSelectedNotifier,
             ),
             const SizedBox(height: 8),
             Expanded(
