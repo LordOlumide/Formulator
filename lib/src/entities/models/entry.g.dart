@@ -16,11 +16,10 @@ class EntryAdapter extends TypeAdapter<Entry> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    print(fields);
     return Entry(
       name: fields[0] as String,
-      value: fields[1] as double,
-      referenceValue: fields[2] as double,
+      value: fields[1] as int,
+      referenceValue: fields[2] as int,
       weight: fields[3] as double,
       costPerUnit: fields[4] as double,
     );

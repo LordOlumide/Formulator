@@ -21,6 +21,7 @@ class _FormulatorAppState extends State<FormulatorApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Formulator',
+      debugShowCheckedModeBanner: false,
       theme: Theme.of(context).copyWith(
         scaffoldBackgroundColor: const Color(0xFFF6F6F6),
       ),

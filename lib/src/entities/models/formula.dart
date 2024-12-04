@@ -211,6 +211,17 @@ class Formula {
     return spans;
   }
 
+  bool get doesFormulaHaveEntries {
+    for (Section section in sections) {
+      for (SubSection subSection in section.subsections) {
+        if (subSection.entries.isNotEmpty) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   /// To check if a subsection name already exists in a section
   bool doesSubExistInSection(String nameToCheck, String sectionNameToCheck) {
     Section sectionToCheck =

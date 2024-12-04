@@ -60,13 +60,14 @@ class _EntryContainerState extends State<EntryContainer> {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.sizeOf(context).width;
-    const double space1Width = 14;
+    const double space1Width = 5;
     const double snWidth = 32;
     const double space1o2Width = 1;
-    final double column1Width = screenWidth / 3.5;
+    final double column1Width = screenWidth / 4;
     const double space2Width = 10;
     final double column2Width = screenWidth / 10;
-    final double space3Width = screenWidth / 39;
+    final double space3Width = screenWidth / 55;
+    final double column3Width = screenWidth / 14;
     const double space4Width = 5;
 
     return Column(
@@ -123,20 +124,20 @@ class _EntryContainerState extends State<EntryContainer> {
               ),
               SizedBox(width: space3Width),
               SizedBox(
-                width: column2Width,
-                child: _NumberInputField(
-                  controller: costPerUnitController,
-                  onChanged: (String? newString) =>
-                      _onEdit(context, newString, _EditedVariable.costPerUnit),
+                width: column3Width,
+                child: Text(
+                  '${(widget.entry.answer * 100).toStringAsFixed(2)}%',
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 16),
                 ),
               ),
               SizedBox(width: space3Width),
               SizedBox(
                 width: column2Width,
-                child: Text(
-                  '${(widget.entry.answer * 100).toStringAsFixed(2)}%',
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 16),
+                child: _NumberInputField(
+                  controller: costPerUnitController,
+                  onChanged: (String? newString) =>
+                      _onEdit(context, newString, _EditedVariable.costPerUnit),
                 ),
               ),
               const SizedBox(width: space4Width),
@@ -220,14 +221,14 @@ class _EntryContainerState extends State<EntryContainer> {
         break;
       case _EditedVariable.value:
         newEntry = entryToEdit.copyWith(
-          value: double.parse(
-              newString == '' || newString == null ? '0' : newString),
+          value:
+              int.parse(newString == '' || newString == null ? '0' : newString),
         );
         break;
       case (_EditedVariable.refValue):
         newEntry = entryToEdit.copyWith(
-          referenceValue: double.parse(
-              newString == '' || newString == null ? '0' : newString),
+          referenceValue:
+              int.parse(newString == '' || newString == null ? '0' : newString),
         );
         break;
       case _EditedVariable.weight:
@@ -284,13 +285,14 @@ class EntryReference extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.sizeOf(context).width;
-    const double space1Width = 14;
+    const double space1Width = 5;
     const double snWidth = 32;
     const double space1o2Width = 1;
-    final double column1Width = screenWidth / 3.5;
+    final double column1Width = screenWidth / 4;
     const double space2Width = 10;
     final double column2Width = screenWidth / 10;
-    final double space3Width = screenWidth / 39;
+    final double space3Width = screenWidth / 55;
+    final double column3Width = screenWidth / 14;
     const double space4Width = 5;
 
     return Row(
@@ -329,9 +331,9 @@ class EntryReference extends StatelessWidget {
         ),
         SizedBox(width: space3Width),
         SizedBox(
-          width: column2Width,
+          width: column3Width,
           child: const Text(
-            'Cost per Unit',
+            'Sub-total',
             style: TextStyle(fontWeight: FontWeight.w500),
           ),
         ),
@@ -339,7 +341,7 @@ class EntryReference extends StatelessWidget {
         SizedBox(
           width: column2Width,
           child: const Text(
-            'Sub-total',
+            'Cost per Unit',
             style: TextStyle(fontWeight: FontWeight.w500),
           ),
         ),

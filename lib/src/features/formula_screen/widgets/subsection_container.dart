@@ -150,8 +150,8 @@ class SubsectionContainer extends StatelessWidget {
     sub.entries.add(
       Entry(
         name: map['name'],
-        value: double.parse(map['value']),
-        referenceValue: double.parse(map['refValue']),
+        value: int.parse(map['value']),
+        referenceValue: int.parse(map['refValue']),
         weight: double.parse(map['weight']),
         costPerUnit: double.parse(map['costPerUnit']),
       ),

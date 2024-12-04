@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:formulator/src/entities/db_manager/db_manager.dart';
 import 'package:formulator/src/entities/models/formula.dart';
+import 'package:formulator/src/features/analysis_screen/analysis_comparison_screen.dart';
+import 'package:formulator/src/features/analysis_screen/analysis_repo/analysis_repo.dart';
+import 'package:formulator/src/features/analysis_screen/widgets/choose_analysis_dialog.dart';
 import 'package:formulator/src/features/formula_screen/views/formula_display_section.dart';
 import 'package:formulator/src/features/formula_screen/views/section_body.dart';
 import 'package:formulator/src/features/formula_screen/views/section_headers.dart';
 import 'package:formulator/src/utils/extensions/number_extension.dart';
+import 'package:formulator/src/utils/functions/show_snackbar.dart';
 import 'package:provider/provider.dart';
 
 class FormulaScreen extends StatefulWidget {
@@ -86,11 +90,13 @@ class _FormulaScreenState extends State<FormulaScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(width: 20),
-            Text(
-              widget.formulaName,
-              style: const TextStyle(
-                fontSize: 23,
-                fontWeight: FontWeight.bold,
+            FittedBox(
+              child: Text(
+                widget.formulaName,
+                style: const TextStyle(
+                  fontSize: 23,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(width: 20),
@@ -112,6 +118,24 @@ class _FormulaScreenState extends State<FormulaScreen> {
                 },
               ),
             ),
+            const Spacer(),
+            MaterialButton(
+              color: Colors.blue,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+              ),
+              child: const Text(
+                'Financial Analysis',
+                style: TextStyle(
+                  fontSize: 23,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+              onPressed: () => _onFinancialAnalysisPressed(context),
+            ),
+            const SizedBox(width: 20),
           ],
         ),
       ),
@@ -159,5 +183,62 @@ class _FormulaScreenState extends State<FormulaScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _onFinancialAnalysisPressed(BuildContext context) async {
+    final Formula initialFormula =
+        context.read<DBManager>().formulasMap[widget.formulaName]!;
+
+    if (initialFormula.doesFormulaHaveEntries == false) {
+      if (context.mounted) {
+        UtilFunctions.showSnackBar(
+          context,
+          'Formula has no entries!',
+        );
+        return;
+      }
+    }
+
+    late final Map<String, dynamic>? map;
+
+    if (context.mounted) {
+      map = await showDialog(
+        context: context,
+        builder: (context) {
+          return const ChooseAnalysisDialog();
+        },
+      );
+    }
+    if (map == null || map.isEmpty) return;
+
+    if (context.mounted) {
+      late final Formula analyzedFormula;
+      late final double totalCost;
+      try {
+        (analyzedFormula, totalCost) = map['analyseTo100percent'] == true
+            ? AnalysisRepo.analyzeTo100Percent(initialFormula)
+            : AnalysisRepo.analyzeWithAmount(initialFormula, map['amount']);
+      } catch (e) {
+        print(e);
+        UtilFunctions.showSnackBar(context, e.toString());
+        return;
+      }
+      // TODO: Handle it async in UI
+
+      if (context.mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AnalysisComparisonScreen(
+              oldFormula: initialFormula,
+              newFormula: analyzedFormula,
+              amountInputted:
+                  map!['analyseTo100percent'] == true ? null : map['amount'],
+              amountSpent: totalCost,
+            ),
+          ),
+        );
+      }
+    }
   }
 }

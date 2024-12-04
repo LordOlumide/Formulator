@@ -27,7 +27,7 @@ void main() async {
   }
 
   final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
-  await Hive.initFlutter(appDocumentsDir.path);
+  await Hive.initFlutter('${appDocumentsDir.path}/formulator');
 
   Hive.registerAdapter(FormulaAdapter());
   Hive.registerAdapter(SectionAdapter());
