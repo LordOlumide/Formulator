@@ -16,14 +16,13 @@ class EntryContainer2 extends StatelessWidget {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.sizeOf(context).width;
     const double space1Width = 1;
-    const double snWidth = 32;
+    const double snWidth = 22;
     const double space1o2Width = 1;
     final double column1Width = screenWidth / 9;
     const double space2Width = 2;
-    final double column2Width = screenWidth / 20;
+    final double column2Width = screenWidth / 16.8;
     const double space3Width = 3;
     final double column3Width = screenWidth / 19;
-    const double space4Width = 5;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -35,9 +34,12 @@ class EntryContainer2 extends StatelessWidget {
               const SizedBox(width: space1Width),
               SizedBox(
                 width: snWidth,
-                child: Text(
-                  '${entryNo.toString()}.',
-                  style: const TextStyle(height: 1.1),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    '${entryNo.toString()}.',
+                    style: const TextStyle(height: 1.1),
+                  ),
                 ),
               ),
               const SizedBox(width: space1o2Width),
@@ -53,41 +55,60 @@ class EntryContainer2 extends StatelessWidget {
               const SizedBox(width: space2Width),
               SizedBox(
                 width: column2Width,
-                child: Text(
-                  entry.weight.formatToString,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    entry.weight.formatToString,
+                  ),
                 ),
               ),
-              SizedBox(width: space3Width),
+              const SizedBox(width: space3Width),
               SizedBox(
                 width: column2Width,
-                child: Text(
-                  entry.value.formatToString,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    entry.value.formatToString,
+                  ),
                 ),
               ),
-              SizedBox(width: space3Width),
+              const SizedBox(width: space3Width),
               SizedBox(
                 width: column2Width,
-                child: Text(
-                  entry.referenceValue.formatToString,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    entry.referenceValue.formatToString,
+                  ),
                 ),
               ),
-              SizedBox(width: space3Width),
+              const SizedBox(width: space3Width),
               SizedBox(
                 width: column3Width,
-                child: Text(
-                  '${(entry.answer * 100).toStringAsFixed(2)}%',
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 16),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    '${(entry.answer * 100).toStringAsFixed(2)}%',
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 16),
+                  ),
                 ),
               ),
-              SizedBox(width: space3Width),
+              const SizedBox(width: space3Width),
               SizedBox(
                 width: column2Width,
-                child: Text(
-                  entry.costPerUnit.formatToString,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.center,
+                  child: Text(
+                    entry.costPerUnit.formatToString,
+                  ),
                 ),
               ),
-              const SizedBox(width: space4Width),
             ],
           ),
         ),
@@ -103,14 +124,13 @@ class EntryReference2 extends StatelessWidget {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.sizeOf(context).width;
     const double space1Width = 1;
-    const double snWidth = 32;
+    const double snWidth = 22;
     const double space1o2Width = 1;
     final double column1Width = screenWidth / 9;
     const double space2Width = 2;
-    final double column2Width = screenWidth / 20;
+    final double column2Width = screenWidth / 16.8;
     const double space3Width = 3;
     final double column3Width = screenWidth / 19;
-    const double space4Width = 5;
 
     return Row(
       children: [
@@ -130,7 +150,7 @@ class EntryReference2 extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.w500),
           ),
         ),
-        SizedBox(width: space3Width),
+        const SizedBox(width: space3Width),
         SizedBox(
           width: column2Width,
           child: const Text(
@@ -138,31 +158,42 @@ class EntryReference2 extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.w500),
           ),
         ),
-        SizedBox(width: space3Width),
+        const SizedBox(width: space3Width),
         SizedBox(
           width: column2Width,
-          child: const Text(
-            'Reference',
-            style: TextStyle(fontWeight: FontWeight.w500),
+          child: const FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Reference',
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
           ),
         ),
-        SizedBox(width: space3Width),
+        const SizedBox(width: space3Width),
         SizedBox(
           width: column3Width,
-          child: const Text(
-            'Sub-total',
-            style: TextStyle(fontWeight: FontWeight.w500),
+          child: const FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Sub-total',
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
           ),
         ),
-        SizedBox(width: space3Width),
+        const SizedBox(width: space3Width),
         SizedBox(
           width: column2Width,
-          child: const Text(
-            'Cost per Unit',
-            style: TextStyle(fontWeight: FontWeight.w500),
+          child: const FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.center,
+            child: Text(
+              'Cost/Unit',
+              style: TextStyle(fontWeight: FontWeight.w500),
+            ),
           ),
         ),
-        const SizedBox(width: space4Width),
       ],
     );
   }

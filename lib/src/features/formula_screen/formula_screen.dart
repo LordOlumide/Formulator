@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:formulator/src/entities/db_manager/db_manager.dart';
 import 'package:formulator/src/entities/models/formula.dart';
@@ -26,6 +28,8 @@ class _FormulaScreenState extends State<FormulaScreen> {
   final ValueNotifier<String?> selectedSectionNotifier = ValueNotifier(null);
 
   Key _rebuildingKey = UniqueKey();
+
+  bool screenIsLoading = false;
 
   void _onChangeSelectedSection() {
     setState(() {
@@ -80,108 +84,125 @@ class _FormulaScreenState extends State<FormulaScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        titleSpacing: 0,
-        backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: true,
-        title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(width: 20),
-            FittedBox(
-              child: Text(
-                widget.formulaName,
-                style: const TextStyle(
-                  fontSize: 23,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const SizedBox(width: 20),
-            Container(
-              padding: const EdgeInsets.fromLTRB(6, 1, 6, 5),
-              decoration: BoxDecoration(
-                color: Colors.blue,
-                borderRadius: BorderRadius.circular(6),
-              ),
-              child: Consumer<DBManager>(
-                builder: (context, manager, child) {
-                  return Text(
-                    '(${manager.formulasMap[widget.formulaName]!.totalSectionWeight.formatToString})',
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            titleSpacing: 0,
+            backgroundColor: Colors.transparent,
+            automaticallyImplyLeading: true,
+            title: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(width: 20),
+                FittedBox(
+                  child: Text(
+                    widget.formulaName,
                     style: const TextStyle(
-                      fontSize: 19,
-                      color: Colors.white,
-                    ),
-                  );
-                },
-              ),
-            ),
-            const Spacer(),
-            MaterialButton(
-              color: Colors.blue,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-              ),
-              child: const Text(
-                'Financial Analysis',
-                style: TextStyle(
-                  fontSize: 23,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
-              ),
-              onPressed: () => _onFinancialAnalysisPressed(context),
-            ),
-            const SizedBox(width: 20),
-          ],
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FormulaDisplaySection(
-              controller: horizFormulaController,
-              formulaName: widget.formulaName,
-            ),
-            const SizedBox(height: 4),
-            SectionHeaders(
-              formulaName: widget.formulaName,
-              selectedSectionNotifier: selectedSectionNotifier,
-              resetSelectedNotifier: _resetSelectedNotifier,
-            ),
-            const SizedBox(height: 8),
-            Expanded(
-              key: _rebuildingKey,
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.04),
-                  border: Border.all(),
-                  borderRadius: BorderRadius.circular(3),
-                ),
-                child: Scrollbar(
-                  controller: vertController,
-                  thumbVisibility: true,
-                  thickness: 20,
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.only(bottom: 50, right: 20),
-                    controller: vertController,
-                    child: SectionBody(
-                      formulaName: widget.formulaName,
-                      selectedSectionNotifier: selectedSectionNotifier,
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-              ),
+                const SizedBox(width: 20),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(6, 1, 6, 5),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Consumer<DBManager>(
+                    builder: (context, manager, child) {
+                      return Text(
+                        '(${manager.formulasMap[widget.formulaName]!.totalSectionWeight.formatToString})',
+                        style: const TextStyle(
+                          fontSize: 19,
+                          color: Colors.white,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const Spacer(),
+                MaterialButton(
+                  color: Colors.blue,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
+                  child: const Text(
+                    'Financial Analysis',
+                    style: TextStyle(
+                      fontSize: 23,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: () => _onFinancialAnalysisPressed(context),
+                ),
+                const SizedBox(width: 20),
+              ],
             ),
-          ],
+          ),
+          body: Padding(
+            padding: const EdgeInsets.only(right: 10, left: 10, bottom: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FormulaDisplaySection(
+                  controller: horizFormulaController,
+                  formulaName: widget.formulaName,
+                ),
+                const SizedBox(height: 4),
+                SectionHeaders(
+                  formulaName: widget.formulaName,
+                  selectedSectionNotifier: selectedSectionNotifier,
+                  resetSelectedNotifier: _resetSelectedNotifier,
+                ),
+                const SizedBox(height: 8),
+                Expanded(
+                  key: _rebuildingKey,
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.blue.withOpacity(0.04),
+                      border: Border.all(),
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    child: Scrollbar(
+                      controller: vertController,
+                      thumbVisibility: true,
+                      thickness: 20,
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.only(bottom: 50, right: 20),
+                        controller: vertController,
+                        child: SectionBody(
+                          formulaName: widget.formulaName,
+                          selectedSectionNotifier: selectedSectionNotifier,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
-      ),
+        screenIsLoading
+            ? Positioned.fill(
+                child: AbsorbPointer(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.2),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                ),
+              )
+            : const SizedBox.shrink(),
+      ],
     );
   }
 
@@ -211,6 +232,9 @@ class _FormulaScreenState extends State<FormulaScreen> {
     }
     if (map == null || map.isEmpty) return;
 
+    setState(() {
+      screenIsLoading = true;
+    });
     if (context.mounted) {
       late final Formula analyzedFormula;
       late final double totalCost;
@@ -218,12 +242,13 @@ class _FormulaScreenState extends State<FormulaScreen> {
         (analyzedFormula, totalCost) = map['analyseTo100percent'] == true
             ? AnalysisRepo.analyzeTo100Percent(initialFormula)
             : AnalysisRepo.analyzeWithAmount(initialFormula, map['amount']);
-      } catch (e) {
+      } on Exception catch (_, e) {
+        log(e.toString());
         print(e);
+        print(_);
         UtilFunctions.showSnackBar(context, e.toString());
         return;
       }
-      // TODO: Handle it async in UI
 
       if (context.mounted) {
         Navigator.push(
@@ -240,5 +265,8 @@ class _FormulaScreenState extends State<FormulaScreen> {
         );
       }
     }
+    setState(() {
+      screenIsLoading = false;
+    });
   }
 }

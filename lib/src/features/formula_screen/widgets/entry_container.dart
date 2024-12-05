@@ -108,6 +108,7 @@ class _EntryContainerState extends State<EntryContainer> {
               SizedBox(
                 width: column2Width,
                 child: _NumberInputField(
+                  allowsOnlyInt: true,
                   controller: valueController,
                   onChanged: (String? newString) =>
                       _onEdit(context, newString, _EditedVariable.value),
@@ -117,6 +118,7 @@ class _EntryContainerState extends State<EntryContainer> {
               SizedBox(
                 width: column2Width,
                 child: _NumberInputField(
+                  allowsOnlyInt: true,
                   controller: refValueController,
                   onChanged: (String? newString) =>
                       _onEdit(context, newString, _EditedVariable.refValue),
@@ -341,7 +343,7 @@ class EntryReference extends StatelessWidget {
         SizedBox(
           width: column2Width,
           child: const Text(
-            'Cost per Unit',
+            'Cost/Unit',
             style: TextStyle(fontWeight: FontWeight.w500),
           ),
         ),
@@ -352,10 +354,12 @@ class EntryReference extends StatelessWidget {
 }
 
 class _NumberInputField extends StatelessWidget {
+  final bool allowsOnlyInt;
   final TextEditingController controller;
   final Function(String?) onChanged;
 
   const _NumberInputField({
+    this.allowsOnlyInt = false,
     required this.controller,
     required this.onChanged,
   });
@@ -366,7 +370,9 @@ class _NumberInputField extends StatelessWidget {
       controller: controller,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+        allowsOnlyInt
+            ? FilteringTextInputFormatter.digitsOnly
+            : FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
       ],
       textAlign: TextAlign.center,
       decoration: const InputDecoration(

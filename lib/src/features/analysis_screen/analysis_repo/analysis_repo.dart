@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:formulator/src/entities/models/entry.dart';
 import 'package:formulator/src/entities/models/formula.dart';
 import 'package:formulator/src/entities/models/section.dart';
@@ -57,61 +59,109 @@ class AnalysisRepo {
   ) {
     double amountSpent = 0;
 
-    final List<DetailedEntry> allDetailedEntries =
+    final List<DetailedEntry> completedDetailedEntries = [];
+    final List<DetailedEntry> initialDetailedEntries =
         _getDetailedEntries(initialFormula);
+
+    void moveEntryFromInitialToCompleted(DetailedEntry entry) {
+      final int indexOfEntry = initialDetailedEntries.indexWhere(
+          (DetailedEntry e) =>
+              e.name == entry.name &&
+              e.sectionName == entry.sectionName &&
+              e.subSectionName == entry.subSectionName);
+      final newEntry = initialDetailedEntries.removeAt(indexOfEntry);
+      completedDetailedEntries.add(newEntry);
+    }
 
     while (true) {
       late final double lowestAnswer;
-      late final double secondLowestAnswer;
+      late double secondLowestAnswer;
 
       late final List<DetailedEntry> entriesWithLowestAnswer;
 
-      if (allDetailedEntries.length > 1) {
+      if (initialDetailedEntries.length > 1) {
         (lowestAnswer, secondLowestAnswer) =
-            _getLowestAndSecondLowestAnswers(allDetailedEntries);
-        entriesWithLowestAnswer = allDetailedEntries
+            _getLowestAndSecondLowestAnswers(initialDetailedEntries);
+        entriesWithLowestAnswer = initialDetailedEntries
             .where((DetailedEntry entry) => entry.answer == lowestAnswer)
             .toList();
         entriesWithLowestAnswer
             .sort((a, b) => a.impactOnFormula.compareTo(b.impactOnFormula));
-      } else if (allDetailedEntries.length == 1) {
-        lowestAnswer = allDetailedEntries[0].answer;
+        print(initialDetailedEntries.map((e) => e.answer));
+        print(entriesWithLowestAnswer.map((e) => e.answer));
+      } else if (initialDetailedEntries.length == 1) {
+        lowestAnswer = initialDetailedEntries[0].answer;
         secondLowestAnswer = 1;
-        entriesWithLowestAnswer = [allDetailedEntries[0]];
+        entriesWithLowestAnswer = [initialDetailedEntries[0]];
       } else {
         throw Exception('There are no entries in the formula!');
       }
+      print(lowestAnswer);
+      print(secondLowestAnswer);
+
+      if (lowestAnswer == secondLowestAnswer && lowestAnswer < 1) {
+        secondLowestAnswer = 1;
+      }
 
       for (DetailedEntry entry in entriesWithLowestAnswer) {
+        if (entry.answer >= 1) {
+          moveEntryFromInitialToCompleted(entry);
+          continue;
+        }
+        print('===================== 1 ======================');
+
         int unitsToReach2ndLowest =
             ((secondLowestAnswer * entry.referenceValue) -
                     (lowestAnswer * entry.referenceValue))
-                .toInt();
+                .ceil();
 
+        print('===================== 2 ======================');
         while (unitsToReach2ndLowest > 0) {
+          print(unitsToReach2ndLowest);
           if (availableAmount >= entry.costPerUnit) {
-            final int indexOfEntry = allDetailedEntries
+            print('eeee');
+            final int indexOfEntry = initialDetailedEntries
                 .indexWhere((DetailedEntry e) => e.name == entry.name);
-            allDetailedEntries.replaceRange(
+            final DetailedEntry newEntry = entry.copyWith(
+                newValue: initialDetailedEntries[indexOfEntry].value + 1);
+            initialDetailedEntries.replaceRange(
               indexOfEntry,
               indexOfEntry + 1,
-              [
-                entry.copyWith(
-                    newValue: allDetailedEntries[indexOfEntry].value + 1)
-              ],
+              [newEntry],
             );
             unitsToReach2ndLowest--;
             availableAmount -= entry.costPerUnit;
             amountSpent += entry.costPerUnit;
-          } else {
-            final Formula newFormula = _getNewFormulaObjectFromDetailedEntries(
-              initialFormula: initialFormula,
-              detailedEntries: allDetailedEntries,
-            );
 
-            return (newFormula, amountSpent);
+            print('===================== 3 ======================');
+            print(initialDetailedEntries.first);
+            if (initialDetailedEntries[indexOfEntry].answer >= 1) {
+              moveEntryFromInitialToCompleted(newEntry);
+              break;
+            }
+            print('===================== 4 ======================');
+          } else {
+            print('===================== 5 ======================');
+            moveEntryFromInitialToCompleted(entry);
+            print('===================== 6 ======================');
+            break;
           }
+          print('===================== 7 ======================');
         }
+        print('===================== 8 ======================');
+      }
+      print('===================== 9 ======================');
+
+      if (initialDetailedEntries.isEmpty) {
+        print('===================== 10 ======================');
+        print(completedDetailedEntries);
+        return (
+          _getNewFormulaObjectFromDetailedEntries(
+            initialFormula: initialFormula,
+            detailedEntries: completedDetailedEntries,
+          ),
+          amountSpent,
+        );
       }
     }
   }
@@ -145,11 +195,12 @@ class AnalysisRepo {
   static (double lowest, double secondLowest) _getLowestAndSecondLowestAnswers(
     List<DetailedEntry> detailedEntries,
   ) {
-    double lowest = double.infinity;
+    double lowest = detailedEntries.map((e) => e.answer).toList().reduce(max);
     double secondLowest = double.infinity;
 
     for (DetailedEntry entry in detailedEntries) {
-      if (entry.answer < lowest) {
+      if (entry.answer < lowest ||
+          (entry.answer == lowest && secondLowest == double.infinity)) {
         secondLowest = lowest;
         lowest = entry.answer;
       } else if (entry.answer < secondLowest && entry.answer != lowest) {
@@ -188,24 +239,34 @@ class AnalysisRepo {
           .toList(),
     );
 
-    for (DetailedEntry detailedEntry in detailedEntries) {
-      newFormula.sections
-          .firstWhere(
-              (Section section) => section.name == detailedEntry.sectionName)
-          .subsections
-          .firstWhere((SubSection subSection) =>
-              subSection.name == detailedEntry.subSectionName)
-          .entries
-          .add(
-            Entry(
-              name: detailedEntry.name,
-              value: detailedEntry.value,
-              referenceValue: detailedEntry.referenceValue,
-              weight: detailedEntry.weight,
-              costPerUnit: detailedEntry.costPerUnit,
-            ),
+    for (Section section in initialFormula.sections) {
+      for (SubSection subSection in section.subsections) {
+        for (Entry entry in subSection.entries) {
+          newFormula.sections
+              .firstWhere((Section s) => s.name == section.name)
+              .subsections
+              .firstWhere((SubSection sub) => sub.name == subSection.name)
+              .entries
+              .add(
+            () {
+              DetailedEntry detailedEntry = detailedEntries.firstWhere(
+                  (DetailedEntry d) =>
+                      d.name == entry.name &&
+                      d.subSectionName == subSection.name &&
+                      d.sectionName == section.name);
+              return Entry(
+                name: detailedEntry.name,
+                value: detailedEntry.value,
+                referenceValue: detailedEntry.referenceValue,
+                weight: detailedEntry.weight,
+                costPerUnit: detailedEntry.costPerUnit,
+              );
+            }(),
           );
+        }
+      }
     }
+
     return newFormula;
   }
 }

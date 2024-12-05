@@ -107,6 +107,17 @@ class _ChooseAnalysisDialogState extends State<ChooseAnalysisDialog> {
                     ],
                   ),
                   const Spacer(flex: 1),
+                  const Text(
+                    'Note: The algorithm assigns money to the entries with the '
+                    'lowest percentages first until they reach the same '
+                    'percentage as the second lowest. This is repeated until the '
+                    'money runs out or all entries are at 100%. For entries with '
+                    'equal percentage, weight is prioritized.'
+                    '\nPercentage = (value / reference) * 100%',
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(height: 1.3, fontSize: 15),
+                  ),
+                  const SizedBox(height: 10),
                   TextFormField(
                     autofocus: true,
                     focusNode: amountTextFieldFocusNode,
@@ -135,7 +146,7 @@ class _ChooseAnalysisDialogState extends State<ChooseAnalysisDialog> {
                           .requestFocus(calculateWithAmountButtonFocusNode);
                     },
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 20),
                   PrimaryButton(
                     shrink: true,
                     onPressed: _analyseWithAmount,

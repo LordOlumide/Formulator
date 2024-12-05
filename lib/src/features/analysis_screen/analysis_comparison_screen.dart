@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:formulator/src/entities/db_manager/db_manager.dart';
 import 'package:formulator/src/entities/models/formula.dart';
 import 'package:formulator/src/features/analysis_screen/widgets/formula_analysis_view.dart';
+import 'package:formulator/src/features/home_screen/widgets/create_rename_formula_dialog.dart';
+import 'package:formulator/src/utils/functions/show_snackbar.dart';
+import 'package:provider/provider.dart';
 
 class AnalysisComparisonScreen extends StatefulWidget {
   final Formula oldFormula;
@@ -78,7 +82,7 @@ class _AnalysisComparisonScreenState extends State<AnalysisComparisonScreen> {
                 ),
               ),
             ),
-            const SizedBox(width: 50),
+            const SizedBox(width: 30),
             widget.amountInputted != null
                 ? Text(
                     'Remainder = ${widget.amountInputted! - widget.amountSpent}',
@@ -88,6 +92,25 @@ class _AnalysisComparisonScreenState extends State<AnalysisComparisonScreen> {
                     ),
                   )
                 : const SizedBox.shrink(),
+            const Spacer(),
+            const Spacer(),
+            MaterialButton(
+              color: Colors.blue,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+              ),
+              child: const Text(
+                'Save New Formula',
+                style: TextStyle(
+                  fontSize: 19,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+              onPressed: () => _onSaveAdjustedFormula(context),
+            ),
+            const SizedBox(width: 20),
           ],
         ),
       ),
@@ -95,6 +118,7 @@ class _AnalysisComparisonScreenState extends State<AnalysisComparisonScreen> {
         children: [
           Expanded(
             child: FormulaAnalysisView(
+              title: 'Original formula',
               scrollController: leftScrollController,
               backgroundColor: Colors.red.withOpacity(0.1),
               formula: widget.oldFormula,
@@ -103,6 +127,7 @@ class _AnalysisComparisonScreenState extends State<AnalysisComparisonScreen> {
           ),
           Expanded(
             child: FormulaAnalysisView(
+              title: 'Adjusted formula',
               scrollController: rightScrollController,
               backgroundColor: Colors.green.withOpacity(0.1),
               formula: widget.newFormula,
@@ -112,5 +137,33 @@ class _AnalysisComparisonScreenState extends State<AnalysisComparisonScreen> {
         ],
       ),
     );
+  }
+
+  Future<void> _onSaveAdjustedFormula(BuildContext context) async {
+    late final String? newFormulaName;
+
+    if (context.mounted) {
+      newFormulaName = await showDialog(
+        context: context,
+        builder: (context) {
+          return const CreateOrRenameFormulaDialog();
+        },
+      );
+    }
+    if (newFormulaName == null || newFormulaName.isEmpty) return;
+
+    if (context.mounted) {
+      if (context.read<DBManager>().formulaNames.contains(newFormulaName)) {
+        UtilFunctions.showSnackBar(
+          context,
+          'Formula already exists with this name!',
+        );
+        return;
+      }
+
+      final Formula newFormula =
+          widget.newFormula.copyWith(name: newFormulaName);
+      context.read<DBManager>().addFormula(newFormula);
+    }
   }
 }
