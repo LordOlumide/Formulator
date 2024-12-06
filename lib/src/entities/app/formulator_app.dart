@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formulator/src/entities/db_manager/db_manager.dart';
 import 'package:formulator/src/features/home_screen/home_screen.dart';
+import 'package:formulator/src/utils/constants/colors.dart';
 import 'package:provider/provider.dart';
 
 class FormulatorApp extends StatefulWidget {
@@ -23,7 +24,7 @@ class _FormulatorAppState extends State<FormulatorApp> {
       title: 'Formulator',
       debugShowCheckedModeBanner: false,
       theme: Theme.of(context).copyWith(
-        scaffoldBackgroundColor: const Color(0xFFF6F6F6),
+        scaffoldBackgroundColor: scaffoldBackgroundColor,
       ),
       home: HomeScreen(),
     );

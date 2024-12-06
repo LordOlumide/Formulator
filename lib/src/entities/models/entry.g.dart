@@ -18,8 +18,8 @@ class EntryAdapter extends TypeAdapter<Entry> {
     };
     return Entry(
       name: fields[0] as String,
-      value: fields[1] as int,
-      referenceValue: fields[2] as int,
+      value: fields[1] as double,
+      referenceValue: fields[2] as double,
       weight: fields[3] as double,
       costPerUnit: fields[4] as double,
     );

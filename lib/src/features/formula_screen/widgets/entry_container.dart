@@ -108,7 +108,6 @@ class _EntryContainerState extends State<EntryContainer> {
               SizedBox(
                 width: column2Width,
                 child: _NumberInputField(
-                  allowsOnlyInt: true,
                   controller: valueController,
                   onChanged: (String? newString) =>
                       _onEdit(context, newString, _EditedVariable.value),
@@ -118,7 +117,6 @@ class _EntryContainerState extends State<EntryContainer> {
               SizedBox(
                 width: column2Width,
                 child: _NumberInputField(
-                  allowsOnlyInt: true,
                   controller: refValueController,
                   onChanged: (String? newString) =>
                       _onEdit(context, newString, _EditedVariable.refValue),
@@ -223,14 +221,14 @@ class _EntryContainerState extends State<EntryContainer> {
         break;
       case _EditedVariable.value:
         newEntry = entryToEdit.copyWith(
-          value:
-              int.parse(newString == '' || newString == null ? '0' : newString),
+          value: double.parse(
+              newString == '' || newString == null ? '0' : newString),
         );
         break;
       case (_EditedVariable.refValue):
         newEntry = entryToEdit.copyWith(
-          referenceValue:
-              int.parse(newString == '' || newString == null ? '0' : newString),
+          referenceValue: double.parse(
+              newString == '' || newString == null ? '0' : newString),
         );
         break;
       case _EditedVariable.weight:
@@ -354,12 +352,10 @@ class EntryReference extends StatelessWidget {
 }
 
 class _NumberInputField extends StatelessWidget {
-  final bool allowsOnlyInt;
   final TextEditingController controller;
   final Function(String?) onChanged;
 
   const _NumberInputField({
-    this.allowsOnlyInt = false,
     required this.controller,
     required this.onChanged,
   });
@@ -370,9 +366,7 @@ class _NumberInputField extends StatelessWidget {
       controller: controller,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [
-        allowsOnlyInt
-            ? FilteringTextInputFormatter.digitsOnly
-            : FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
       ],
       textAlign: TextAlign.center,
       decoration: const InputDecoration(

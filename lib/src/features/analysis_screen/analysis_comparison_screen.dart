@@ -4,6 +4,7 @@ import 'package:formulator/src/entities/models/formula.dart';
 import 'package:formulator/src/features/analysis_screen/widgets/formula_analysis_view.dart';
 import 'package:formulator/src/features/home_screen/widgets/create_rename_formula_dialog.dart';
 import 'package:formulator/src/utils/functions/show_snackbar.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class AnalysisComparisonScreen extends StatefulWidget {
@@ -75,7 +76,8 @@ class _AnalysisComparisonScreenState extends State<AnalysisComparisonScreen> {
             const SizedBox(width: 20),
             FittedBox(
               child: Text(
-                'Total Spent = ${widget.amountSpent}',
+                'Total Spent = '
+                '${NumberFormat.decimalPattern().format(widget.amountSpent)}',
                 style: const TextStyle(
                   fontSize: 23,
                   fontWeight: FontWeight.bold,

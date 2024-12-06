@@ -8,10 +8,10 @@ class Entry {
   final String name;
 
   @HiveField(1)
-  final int value;
+  final double value;
 
   @HiveField(2)
-  final int referenceValue;
+  final double referenceValue;
 
   @HiveField(3)
   final double weight;
@@ -31,8 +31,8 @@ class Entry {
 
   Entry copyWith({
     String? name,
-    int? value,
-    int? referenceValue,
+    double? value,
+    double? referenceValue,
     double? weight,
     double? costPerUnit,
   }) {

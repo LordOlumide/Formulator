@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 
 class DetailedEntry extends Equatable {
   final String name;
-  final int value;
-  final int referenceValue;
+  final double value;
+  final double referenceValue;
   final double weight;
   final double costPerUnit;
   final double answer;
@@ -22,13 +22,13 @@ class DetailedEntry extends Equatable {
     required this.referenceValue,
     required this.weight,
     required this.costPerUnit,
+    required this.answer,
     required this.subSectionName,
     required this.sectionName,
     required this.impactOnFormula,
-    required this.answer,
   });
 
-  DetailedEntry copyWith({required int newValue}) {
+  DetailedEntry copyWith({required double newValue}) {
     final double newAnswer = newValue / referenceValue;
     return DetailedEntry(
       name: name,
@@ -45,7 +45,7 @@ class DetailedEntry extends Equatable {
 
   @override
   String toString() {
-    return 'EntryWithDetails{name: $name, value: $value, referenceValue: $referenceValue, '
+    return 'DetailedEntry: {name: $name, value: $value, referenceValue: $referenceValue, '
         'weight: $weight, costPerUnit: $costPerUnit, answer: $answer, '
         'subSectionName: $subSectionName, sectionName: $sectionName, '
         'impactOnFormula: $impactOnFormula}';

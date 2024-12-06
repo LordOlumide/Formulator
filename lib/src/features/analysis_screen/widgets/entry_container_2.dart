@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:formulator/src/entities/models/entry.dart';
+import 'package:formulator/src/features/analysis_screen/models/entry_with_amount.dart';
 import 'package:formulator/src/utils/extensions/number_extension.dart';
+import 'package:intl/intl.dart';
 
 class EntryContainer2 extends StatelessWidget {
   final int entryNo;
@@ -18,11 +20,15 @@ class EntryContainer2 extends StatelessWidget {
     const double space1Width = 1;
     const double snWidth = 22;
     const double space1o2Width = 1;
-    final double column1Width = screenWidth / 9;
+    final double column1Width = screenWidth / 12;
     const double space2Width = 2;
-    final double column2Width = screenWidth / 16.8;
+    final double column2Width = screenWidth / 19;
     const double space3Width = 3;
     final double column3Width = screenWidth / 19;
+
+    // if (entry is EntryWithAmount) {
+    //   print((entry as EntryWithAmount).amountAdded);
+    // }
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -94,7 +100,7 @@ class EntryContainer2 extends StatelessWidget {
                   child: Text(
                     '${(entry.answer * 100).toStringAsFixed(2)}%',
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 15),
                   ),
                 ),
               ),
@@ -109,6 +115,23 @@ class EntryContainer2 extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(width: space3Width),
+              entry is EntryWithAmount
+                  ? SizedBox(
+                      width: column2Width,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.center,
+                        child: Text(
+                          '+${NumberFormat.decimalPattern().format((entry as EntryWithAmount).amountAdded)}',
+                          style: const TextStyle(
+                            color: Colors.green,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
             ],
           ),
         ),
@@ -118,7 +141,9 @@ class EntryContainer2 extends StatelessWidget {
 }
 
 class EntryReference2 extends StatelessWidget {
-  const EntryReference2({super.key});
+  final bool showAmountAdded;
+
+  const EntryReference2({super.key, this.showAmountAdded = false});
 
   @override
   Widget build(BuildContext context) {
@@ -126,9 +151,9 @@ class EntryReference2 extends StatelessWidget {
     const double space1Width = 1;
     const double snWidth = 22;
     const double space1o2Width = 1;
-    final double column1Width = screenWidth / 9;
+    final double column1Width = screenWidth / 12;
     const double space2Width = 2;
-    final double column2Width = screenWidth / 16.8;
+    final double column2Width = screenWidth / 19;
     const double space3Width = 3;
     final double column3Width = screenWidth / 19;
 
@@ -194,6 +219,21 @@ class EntryReference2 extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(width: space3Width),
+        showAmountAdded
+            ? SizedBox(
+                width: column2Width,
+                child: const FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Amount\nAdded',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                ),
+              )
+            : const SizedBox.shrink(),
       ],
     );
   }

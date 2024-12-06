@@ -4,7 +4,8 @@ import 'package:formulator/src/entities/models/entry.dart';
 import 'package:formulator/src/entities/models/formula.dart';
 import 'package:formulator/src/entities/models/section.dart';
 import 'package:formulator/src/entities/models/sub_section.dart';
-import 'package:formulator/src/features/analysis_screen/models/entry_with_details.dart';
+import 'package:formulator/src/features/analysis_screen/models/detailed_entry.dart';
+import 'package:formulator/src/features/analysis_screen/models/entry_with_amount.dart';
 
 class AnalysisRepo {
   /// Returns the 100% formula and the cost of achieving it
@@ -26,18 +27,30 @@ class AnalysisRepo {
         );
 
         for (Entry entry in subSection.entries) {
-          late final Entry newEntry;
+          late final EntryWithAmount newEntry;
           if (entry.value >= entry.referenceValue) {
-            newEntry = entry.copyWith();
+            newEntry = EntryWithAmount(
+              name: entry.name,
+              value: entry.value,
+              referenceValue: entry.referenceValue,
+              weight: entry.weight,
+              costPerUnit: entry.costPerUnit,
+              amountAdded: null,
+            );
           } else {
-            final int units = entry.referenceValue - entry.value;
+            final double units = entry.referenceValue - entry.value;
             final double cost = units * entry.costPerUnit;
             totalCost += cost;
 
-            newEntry = entry.copyWith(
+            newEntry = EntryWithAmount(
+              name: entry.name,
               value: entry.value < entry.referenceValue
                   ? entry.referenceValue
                   : entry.value,
+              referenceValue: entry.referenceValue,
+              weight: entry.weight,
+              costPerUnit: entry.costPerUnit,
+              amountAdded: cost,
             );
           }
 
@@ -86,9 +99,7 @@ class AnalysisRepo {
             .where((DetailedEntry entry) => entry.answer == lowestAnswer)
             .toList();
         entriesWithLowestAnswer
-            .sort((a, b) => a.impactOnFormula.compareTo(b.impactOnFormula));
-        print(initialDetailedEntries.map((e) => e.answer));
-        print(entriesWithLowestAnswer.map((e) => e.answer));
+            .sort((a, b) => b.impactOnFormula.compareTo(a.impactOnFormula));
       } else if (initialDetailedEntries.length == 1) {
         lowestAnswer = initialDetailedEntries[0].answer;
         secondLowestAnswer = 1;
@@ -96,8 +107,6 @@ class AnalysisRepo {
       } else {
         throw Exception('There are no entries in the formula!');
       }
-      print(lowestAnswer);
-      print(secondLowestAnswer);
 
       if (lowestAnswer == secondLowestAnswer && lowestAnswer < 1) {
         secondLowestAnswer = 1;
@@ -108,53 +117,37 @@ class AnalysisRepo {
           moveEntryFromInitialToCompleted(entry);
           continue;
         }
-        print('===================== 1 ======================');
 
-        int unitsToReach2ndLowest =
-            ((secondLowestAnswer * entry.referenceValue) -
-                    (lowestAnswer * entry.referenceValue))
-                .ceil();
+        if (availableAmount >= entry.costPerUnit) {
+          final double unitsToAdd = entry.referenceValue - entry.value < 1
+              ? entry.referenceValue - entry.value
+              : entry.value % 1 == 0
+                  ? 1
+                  : entry.value % 1;
+          final double cost = unitsToAdd * entry.costPerUnit;
 
-        print('===================== 2 ======================');
-        while (unitsToReach2ndLowest > 0) {
-          print(unitsToReach2ndLowest);
-          if (availableAmount >= entry.costPerUnit) {
-            print('eeee');
-            final int indexOfEntry = initialDetailedEntries
-                .indexWhere((DetailedEntry e) => e.name == entry.name);
-            final DetailedEntry newEntry = entry.copyWith(
-                newValue: initialDetailedEntries[indexOfEntry].value + 1);
-            initialDetailedEntries.replaceRange(
-              indexOfEntry,
-              indexOfEntry + 1,
-              [newEntry],
-            );
-            unitsToReach2ndLowest--;
-            availableAmount -= entry.costPerUnit;
-            amountSpent += entry.costPerUnit;
+          final int indexOfEntry = initialDetailedEntries
+              .indexWhere((DetailedEntry e) => e.name == entry.name);
+          final DetailedEntry newEntry = entry.copyWith(
+            newValue: initialDetailedEntries[indexOfEntry].value + unitsToAdd,
+          );
+          initialDetailedEntries.replaceRange(
+            indexOfEntry,
+            indexOfEntry + 1,
+            [newEntry],
+          );
+          availableAmount -= cost;
+          amountSpent += cost;
 
-            print('===================== 3 ======================');
-            print(initialDetailedEntries.first);
-            if (initialDetailedEntries[indexOfEntry].answer >= 1) {
-              moveEntryFromInitialToCompleted(newEntry);
-              break;
-            }
-            print('===================== 4 ======================');
-          } else {
-            print('===================== 5 ======================');
-            moveEntryFromInitialToCompleted(entry);
-            print('===================== 6 ======================');
-            break;
+          if (initialDetailedEntries[indexOfEntry].answer >= 1) {
+            moveEntryFromInitialToCompleted(newEntry);
           }
-          print('===================== 7 ======================');
+        } else {
+          moveEntryFromInitialToCompleted(entry);
         }
-        print('===================== 8 ======================');
       }
-      print('===================== 9 ======================');
 
       if (initialDetailedEntries.isEmpty) {
-        print('===================== 10 ======================');
-        print(completedDetailedEntries);
         return (
           _getNewFormulaObjectFromDetailedEntries(
             initialFormula: initialFormula,
@@ -254,12 +247,20 @@ class AnalysisRepo {
                       d.name == entry.name &&
                       d.subSectionName == subSection.name &&
                       d.sectionName == section.name);
-              return Entry(
+
+              final double unitsAdded = detailedEntry.value - entry.value;
+              final double cost = unitsAdded * entry.costPerUnit;
+              print(unitsAdded);
+              print(cost);
+              print('=========================');
+
+              return EntryWithAmount(
                 name: detailedEntry.name,
                 value: detailedEntry.value,
                 referenceValue: detailedEntry.referenceValue,
                 weight: detailedEntry.weight,
                 costPerUnit: detailedEntry.costPerUnit,
+                amountAdded: cost,
               );
             }(),
           );

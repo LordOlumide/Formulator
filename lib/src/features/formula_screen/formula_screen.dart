@@ -2,9 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:formulator/src/entities/db_manager/db_manager.dart';
+import 'package:formulator/src/entities/models/entry.dart';
 import 'package:formulator/src/entities/models/formula.dart';
+import 'package:formulator/src/entities/models/section.dart';
+import 'package:formulator/src/entities/models/sub_section.dart';
 import 'package:formulator/src/features/analysis_screen/analysis_comparison_screen.dart';
 import 'package:formulator/src/features/analysis_screen/analysis_repo/analysis_repo.dart';
+import 'package:formulator/src/features/analysis_screen/models/entry_with_amount.dart';
 import 'package:formulator/src/features/analysis_screen/widgets/choose_analysis_dialog.dart';
 import 'package:formulator/src/features/formula_screen/views/formula_display_section.dart';
 import 'package:formulator/src/features/formula_screen/views/section_body.dart';
@@ -244,11 +248,46 @@ class _FormulaScreenState extends State<FormulaScreen> {
             : AnalysisRepo.analyzeWithAmount(initialFormula, map['amount']);
       } on Exception catch (_, e) {
         log(e.toString());
-        print(e);
-        print(_);
+        log(_.toString());
         UtilFunctions.showSnackBar(context, e.toString());
         return;
       }
+
+      final Formula analyzedFormulaWithAmount = Formula(
+        name: analyzedFormula.name,
+        sections: analyzedFormula.sections
+            .map(
+              (Section section) => Section(
+                name: section.name,
+                weight: section.weight,
+                subsections: section.subsections
+                    .map(
+                      (SubSection subSection) => SubSection(
+                        name: subSection.name,
+                        weight: subSection.weight,
+                        entries: subSection.entries.map(
+                          (Entry entry) {
+                            final double unitsAdded = (-entry.value);
+                            final double amountAdded =
+                                unitsAdded * entry.costPerUnit;
+
+                            return EntryWithAmount(
+                              name: entry.name,
+                              value: entry.value,
+                              referenceValue: entry.referenceValue,
+                              weight: entry.weight,
+                              costPerUnit: entry.costPerUnit,
+                              amountAdded: amountAdded,
+                            );
+                          },
+                        ).toList(),
+                      ),
+                    )
+                    .toList(),
+              ),
+            )
+            .toList(),
+      );
 
       if (context.mounted) {
         Navigator.push(
@@ -256,7 +295,7 @@ class _FormulaScreenState extends State<FormulaScreen> {
           MaterialPageRoute(
             builder: (context) => AnalysisComparisonScreen(
               oldFormula: initialFormula,
-              newFormula: analyzedFormula,
+              newFormula: analyzedFormulaWithAmount,
               amountInputted:
                   map!['analyseTo100percent'] == true ? null : map['amount'],
               amountSpent: totalCost,

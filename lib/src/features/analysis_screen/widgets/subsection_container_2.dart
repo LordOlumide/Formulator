@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:formulator/src/entities/models/sub_section.dart';
+import 'package:formulator/src/features/analysis_screen/models/entry_with_amount.dart';
 import 'package:formulator/src/features/analysis_screen/widgets/entry_container_2.dart';
 import 'package:formulator/src/utils/extensions/number_extension.dart';
 
@@ -58,7 +59,12 @@ class SubsectionContainer2 extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 3),
-          const EntryReference2(),
+          EntryReference2(
+            showAmountAdded: subSection.entries.isEmpty ||
+                    subSection.entries[0] is! EntryWithAmount
+                ? false
+                : true,
+          ),
           for (int i = 0; i < subSection.entries.length; i++)
             EntryContainer2(entryNo: i + 1, entry: subSection.entries[i]),
         ],
