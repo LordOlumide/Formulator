@@ -266,10 +266,9 @@ class _FormulaScreenState extends State<FormulaScreen> {
                         name: subSection.name,
                         weight: subSection.weight,
                         entries: subSection.entries.map(
-                          (Entry entry) {
-                            final double unitsAdded = (-entry.value);
-                            final double amountAdded =
-                                unitsAdded * entry.costPerUnit;
+                          (Entry e) {
+                            final EntryWithAmount entry =
+                                (e as EntryWithAmount);
 
                             return EntryWithAmount(
                               name: entry.name,
@@ -277,7 +276,7 @@ class _FormulaScreenState extends State<FormulaScreen> {
                               referenceValue: entry.referenceValue,
                               weight: entry.weight,
                               costPerUnit: entry.costPerUnit,
-                              amountAdded: amountAdded,
+                              amountAdded: entry.amountAdded,
                             );
                           },
                         ).toList(),

@@ -125,8 +125,9 @@ class EntryContainer2 extends StatelessWidget {
                         child: Text(
                           '+${NumberFormat.decimalPattern().format((entry as EntryWithAmount).amountAdded)}',
                           style: const TextStyle(
-                            color: Colors.green,
+                            color: Color(0xFF3E9F33),
                             fontSize: 15,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),

@@ -250,9 +250,6 @@ class AnalysisRepo {
 
               final double unitsAdded = detailedEntry.value - entry.value;
               final double cost = unitsAdded * entry.costPerUnit;
-              print(unitsAdded);
-              print(cost);
-              print('=========================');
 
               return EntryWithAmount(
                 name: detailedEntry.name,
