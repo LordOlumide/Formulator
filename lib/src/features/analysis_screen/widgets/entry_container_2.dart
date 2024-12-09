@@ -228,7 +228,7 @@ class EntryReference2 extends StatelessWidget {
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.center,
                   child: Text(
-                    'Amount\nAdded',
+                    '+Amount',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontWeight: FontWeight.w500),
                   ),
