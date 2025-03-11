@@ -41,15 +41,19 @@ class _AnalysisComparisonScreenState extends State<AnalysisComparisonScreen> {
   }
 
   void _leftControllerListener() {
-    setState(() {
-      rightScrollController.jumpTo(leftScrollController.offset);
-    });
+    if (leftScrollController.offset != rightScrollController.offset) {
+      setState(() {
+        rightScrollController.jumpTo(leftScrollController.offset);
+      });
+    }
   }
 
   void _rightControllerListener() {
-    setState(() {
-      leftScrollController.jumpTo(rightScrollController.offset);
-    });
+    if (leftScrollController.offset != rightScrollController.offset) {
+      setState(() {
+        leftScrollController.jumpTo(rightScrollController.offset);
+      });
+    }
   }
 
   @override
