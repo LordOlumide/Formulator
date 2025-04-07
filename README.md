@@ -1,16 +1,14 @@
 # formulator
 
-A new Flutter project.
+Formulator is a development and cost estimation application developed as a Mechanical Engineering Master's project developed for a student of Prof. P. K. Oke, the Dean of the School of Metallurgical and Manufacturing Engineering (SIMME) in the Federal University of Technology, Akure.
 
-## Getting Started
+## Purpose
 
-This project is a starting point for a Flutter application.
+The main purpose of the application is:
+1. To analyse the estimated level of development of an organisation as compared to a benchmark and express this in numerical values.
+2. To analyse the cost required to bring the level of development to a particular level.
+3. To properly distribute the cost in such a manner as to maximize impact of the resources on the level of development.
 
-A few resources to get you started if this is your first Flutter project:
+To achieve this purposes, advanced academic algorithms are implemented and the results are displayed in a perfectly reactive and sleek modern User interface.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Screenshots
