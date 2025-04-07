@@ -24,13 +24,11 @@ To achieve this purposes, advanced academic algorithms are implemented and the r
 #### Generated cost & development results
 <img src="screenshots/results_screen.png">
 
-
 ## Contributing
 We welcome contributions from anyone. To contribute to the project, please follow these steps:
-- Fork the repository.
-- Create a new branch for your feature or bugfix.
-- Make your changes and commit them.
-- Push your changes to your forked repository.
-- Open a pull request against the main branch of this repository.
-
+- 🍴 Fork the repository.
+- 🌿 Create a branch for your feature/fix.
+- 💻 Commit changes with clear messages.
+- 🔄 Push to your fork.
+- ✨ Open a PR targeting the main branch.
 
