@@ -17,10 +17,11 @@ To achieve this purposes, advanced academic algorithms are implemented and the r
 
 ## Screenshots
 
-| Analysis Screen | Results Screen |  
-|-----------------|----------------|  
-| <img src="screenshots/analysis_screen.png" width="300"> | <img src="screenshots/results_screen.png" width="300"> |  
-*Left: Input parameters for analysis. Right: Generated cost/distribution results.*  
+<img src="screenshots/analysis_screen.png">
+*Development Analysis Screen*
+
+<img src="screenshots/results_screen.png">
+*Generated cost & development results.*
 
 
 ## Contributing
@@ -30,4 +31,5 @@ We welcome contributions from anyone. To contribute to the project, please follo
 - Make your changes and commit them.
 - Push your changes to your forked repository.
 - Open a pull request against the main branch of this repository.
+
 
