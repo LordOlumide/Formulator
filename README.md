@@ -17,12 +17,12 @@ To achieve this purposes, advanced academic algorithms are implemented and the r
 
 ## Screenshots
 
+#### Development Analysis Screen
 <img src="screenshots/analysis_screen.png">
-*Development Analysis Screen*
 
 
+#### Generated cost & development results
 <img src="screenshots/results_screen.png">
-*Generated cost & development results.*
 
 
 ## Contributing
