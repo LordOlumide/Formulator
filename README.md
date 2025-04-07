@@ -17,8 +17,8 @@ To achieve this purposes, advanced academic algorithms are implemented and the r
 
 ## Screenshots
 
-| Analysis Screen                                         | Results Screen                                         |  
-|---------------------------------------------------------|--------------------------------------------------------|  
+| Analysis Screen | Results Screen |  
+|-----------------|----------------|  
 | <img src="screenshots/analysis_screen.png" width="300"> | <img src="screenshots/results_screen.png" width="300"> |  
 *Left: Input parameters for analysis. Right: Generated cost/distribution results.*  
 
