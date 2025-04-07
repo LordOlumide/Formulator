@@ -12,3 +12,8 @@ The main purpose of the application is:
 To achieve this purposes, advanced academic algorithms are implemented and the results are displayed in a perfectly reactive and sleek modern User interface.
 
 ## Screenshots
+
+<img src="screenshots/analysis_screen.png">
+
+<img src="screenshots/results_screen.png">
+
