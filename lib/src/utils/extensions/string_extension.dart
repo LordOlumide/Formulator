@@ -55,9 +55,8 @@ extension StringExtension on String {
   String toEachFirstUpperCase() {
     if (isEmpty) return '';
     if (length == 1) return toUpperCase();
-    final List<String> upperWords = words.map((e) {
-      return e.toFirstUpperCase();
-    }).toList();
+    final List<String> upperWords =
+        words.map((e) => e.toFirstUpperCase()).toList();
     return upperWords.join(' ');
   }
 
