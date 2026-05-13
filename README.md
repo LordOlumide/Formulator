@@ -1,6 +1,7 @@
 # formulator
 
 A Flutter-based development analyzer and cost estimator for organizational benchmarking.
+The generated Windows app was renamed to "AJACAB 2026".
 
 
 ## Description

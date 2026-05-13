@@ -26,7 +26,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 40),
               const Text(
-                'Formulator',
+                'AJACAB 2026',
                 style: TextStyle(fontSize: 38, fontWeight: FontWeight.w800),
               ),
               const SizedBox(height: 40),

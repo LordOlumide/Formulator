@@ -21,7 +21,7 @@ class _FormulatorAppState extends State<FormulatorApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Formulator',
+      title: 'AJACAB 2026',
       debugShowCheckedModeBanner: false,
       theme: Theme.of(context).copyWith(
         scaffoldBackgroundColor: scaffoldBackgroundColor,
